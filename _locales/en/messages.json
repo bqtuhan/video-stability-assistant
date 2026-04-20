@@ -1,0 +1,246 @@
+{
+  "extensionName": {
+    "message": "Video Stability Assistant",
+    "description": "The display name of the extension shown in the browser UI."
+  },
+  "extensionDescription": {
+    "message": "Real-time video playback quality monitoring with stability scoring, freeze prediction, and actionable advisories.",
+    "description": "The description shown on the extensions management page."
+  },
+
+  "popupTitle": {
+    "message": "Video Stability Assistant",
+    "description": "Title shown at the top of the popup."
+  },
+  "popupNoVideo": {
+    "message": "No video detected",
+    "description": "Message shown in the popup when no video element is found on the active tab."
+  },
+  "popupNoVideoHint": {
+    "message": "Navigate to a page with a playing video to begin monitoring stability.",
+    "description": "Hint text shown below the no-video message."
+  },
+
+  "scoreLabel": {
+    "message": "Stability Score",
+    "description": "Label for the overall stability score gauge."
+  },
+  "levelExcellent": {
+    "message": "Excellent",
+    "description": "Stability level: excellent (score ≥ 85)."
+  },
+  "levelGood": {
+    "message": "Good",
+    "description": "Stability level: good (score ≥ 65)."
+  },
+  "levelFair": {
+    "message": "Fair",
+    "description": "Stability level: fair (score ≥ 45)."
+  },
+  "levelPoor": {
+    "message": "Poor",
+    "description": "Stability level: poor (score ≥ 25)."
+  },
+  "levelCritical": {
+    "message": "Critical",
+    "description": "Stability level: critical (score < 25)."
+  },
+
+  "factorBufferHealth": {
+    "message": "Buffer Health",
+    "description": "Label for the buffer health scoring factor."
+  },
+  "factorDropRate": {
+    "message": "Frame Drop Rate",
+    "description": "Label for the frame drop rate scoring factor."
+  },
+  "factorStallFrequency": {
+    "message": "Stall Frequency",
+    "description": "Label for the stall frequency scoring factor."
+  },
+  "factorBitrateStability": {
+    "message": "Bitrate Stability",
+    "description": "Label for the bitrate stability scoring factor."
+  },
+  "factorDecodePerformance": {
+    "message": "Decode Performance",
+    "description": "Label for the decode performance scoring factor."
+  },
+
+  "metricBitrate": {
+    "message": "Bitrate",
+    "description": "Label for the current stream bitrate metric card."
+  },
+  "metricBandwidth": {
+    "message": "Bandwidth",
+    "description": "Label for the available network bandwidth metric card."
+  },
+  "metricDropRate": {
+    "message": "Drop Rate",
+    "description": "Label for the frame drop rate metric card."
+  },
+  "metricDecodeTime": {
+    "message": "Decode Time",
+    "description": "Label for the average frame decode time metric card."
+  },
+  "metricBuffer": {
+    "message": "Buffer",
+    "description": "Label for the buffer bar."
+  },
+  "metricStalls": {
+    "message": "Stalls this session",
+    "description": "Label for the stall count display."
+  },
+
+  "predictionTitle": {
+    "message": "Freeze Prediction",
+    "description": "Section heading for the freeze prediction panel."
+  },
+  "predictionSafe": {
+    "message": "No Freeze Predicted",
+    "description": "Status message when no freeze is expected."
+  },
+  "predictionWarn": {
+    "message": "Freeze Risk Detected",
+    "description": "Status message when a freeze is considered likely."
+  },
+  "predictionProbability": {
+    "message": "Probability",
+    "description": "Label for the freeze probability value."
+  },
+  "predictionEstTime": {
+    "message": "Est. Time",
+    "description": "Label for the estimated time until freeze."
+  },
+  "predictionConfidence": {
+    "message": "Confidence",
+    "description": "Label for the prediction confidence tier."
+  },
+  "predictionConfidenceLow": {
+    "message": "Low",
+    "description": "Low prediction confidence tier."
+  },
+  "predictionConfidenceMedium": {
+    "message": "Medium",
+    "description": "Medium prediction confidence tier."
+  },
+  "predictionConfidenceHigh": {
+    "message": "High",
+    "description": "High prediction confidence tier."
+  },
+
+  "advisoryTitle": {
+    "message": "Advisories",
+    "description": "Section heading for the advisory list."
+  },
+  "advisoryNone": {
+    "message": "No advisories at this time.",
+    "description": "Message shown when there are no active advisories."
+  },
+  "advisorySuggestedActions": {
+    "message": "Suggested Actions",
+    "description": "Sub-heading for the list of actions within an advisory card."
+  },
+
+  "notifTitlePrefix": {
+    "message": "Video Stability:",
+    "description": "Prefix for desktop notification titles."
+  },
+
+  "modeBalanced": {
+    "message": "Balanced",
+    "description": "Playback mode: balanced."
+  },
+  "modeLive": {
+    "message": "Live",
+    "description": "Playback mode: live."
+  },
+  "modeVod": {
+    "message": "VOD",
+    "description": "Playback mode: video on demand."
+  },
+
+  "settingsTitle": {
+    "message": "Settings",
+    "description": "Title of the options page."
+  },
+  "settingsPlaybackMode": {
+    "message": "Playback Mode",
+    "description": "Settings section heading for playback mode selection."
+  },
+  "settingsNotifications": {
+    "message": "Notifications",
+    "description": "Settings section heading for notification controls."
+  },
+  "settingsSampling": {
+    "message": "Metrics Collection",
+    "description": "Settings section heading for sampling interval controls."
+  },
+  "settingsSiteAllowlist": {
+    "message": "Site Allowlist",
+    "description": "Settings section heading for the site allowlist."
+  },
+  "settingsAdvanced": {
+    "message": "Advanced",
+    "description": "Settings section heading for advanced options."
+  },
+  "settingsAppearance": {
+    "message": "Appearance",
+    "description": "Settings section heading for theme selection."
+  },
+  "settingsReset": {
+    "message": "Reset to Defaults",
+    "description": "Settings section heading for the reset action."
+  },
+
+  "btnSave": {
+    "message": "Save",
+    "description": "Save button label."
+  },
+  "btnReset": {
+    "message": "Reset All Settings",
+    "description": "Reset button label in the danger zone."
+  },
+  "btnConfirmReset": {
+    "message": "Confirm Reset",
+    "description": "Confirmation button for the reset action."
+  },
+  "btnCancel": {
+    "message": "Cancel",
+    "description": "Cancel button label."
+  },
+  "btnRefresh": {
+    "message": "Refresh",
+    "description": "Refresh button tooltip."
+  },
+  "btnSettings": {
+    "message": "Settings",
+    "description": "Settings button tooltip."
+  },
+
+  "statusSaving": {
+    "message": "Saving…",
+    "description": "Status banner text while settings are being saved."
+  },
+  "statusSaved": {
+    "message": "Settings saved.",
+    "description": "Status banner text after successful save."
+  },
+  "statusError": {
+    "message": "Save failed. Please try again.",
+    "description": "Status banner text when saving fails."
+  },
+
+  "themeLight": {
+    "message": "Light",
+    "description": "Light theme option label."
+  },
+  "themeDark": {
+    "message": "Dark",
+    "description": "Dark theme option label."
+  },
+  "themeAuto": {
+    "message": "System",
+    "description": "System-preference (auto) theme option label."
+  }
+}

@@ -1,0 +1,236 @@
+name: CI / Build / Release
+
+on:
+  push:
+    branches: [main, master]
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 1 — Quality Gate (lint + type-check + unit tests)
+  # ─────────────────────────────────────────────────────────────────────────────
+  quality:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: TypeScript Type Check
+        run: npm run type-check
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Unit Tests with Coverage
+        run: npm run test:coverage
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 2 — Build Chrome Extension (MV3)
+  # ─────────────────────────────────────────────────────────────────────────────
+  build-chrome:
+    name: Build Chrome (MV3)
+    runs-on: ubuntu-latest
+    needs: quality
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build for Chrome
+        run: npm run build
+        env:
+          NODE_ENV: production
+          BROWSER: chrome
+
+      - name: Extract Version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./dist/manifest.json').version")
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Building version: ${VERSION}"
+
+      - name: Package Chrome Extension
+        run: npm run zip
+        env:
+          BROWSER: chrome
+
+      - name: Upload Chrome Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-chrome-${{ steps.version.outputs.version }}
+          path: releases/video-stability-assistant-${{ steps.version.outputs.version }}-chrome.zip
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 3 — Build Firefox Extension (MV3)
+  # ─────────────────────────────────────────────────────────────────────────────
+  build-firefox:
+    name: Build Firefox (MV3)
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build for Firefox
+        run: npm run build:firefox
+        env:
+          NODE_ENV: production
+          BROWSER: firefox
+
+      - name: Extract Version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./dist/manifest.json').version")
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Package Firefox Extension
+        run: npm run zip:firefox
+        env:
+          BROWSER: firefox
+
+      - name: Upload Firefox Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsa-firefox-${{ steps.version.outputs.version }}
+          path: releases/video-stability-assistant-${{ steps.version.outputs.version }}-firefox.zip
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 4 — GitHub Release (only on version tags: v*.*.*)
+  # ─────────────────────────────────────────────────────────────────────────────
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build-chrome, build-firefox]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Chrome Release
+        run: npm run build && npm run zip
+        env:
+          NODE_ENV: production
+          BROWSER: chrome
+
+      - name: Build Firefox Release
+        run: npm run build:firefox && npm run zip:firefox
+        env:
+          NODE_ENV: production
+          BROWSER: firefox
+
+      - name: Extract Version & Tag
+        id: meta
+        run: |
+          VERSION=$(node -p "require('./manifest.json').version")
+          TAG="${GITHUB_REF#refs/tags/}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "chrome_zip=releases/video-stability-assistant-${VERSION}-chrome.zip" >> $GITHUB_OUTPUT
+          echo "firefox_zip=releases/video-stability-assistant-${VERSION}-firefox.zip" >> $GITHUB_OUTPUT
+
+      - name: Generate Release Notes
+        id: notes
+        run: |
+          cat << 'EOF' > release_notes.md
+          ## Video Stability Assistant ${{ steps.meta.outputs.tag }}
+
+          Real-time browser extension for video playback stability monitoring, freeze prediction, and actionable advisories.
+
+          ### Downloads
+
+          | Platform | File | Notes |
+          |---|---|---|
+          | Chrome / Edge / Brave / Kiwi | `*-chrome.zip` | Manifest V3 |
+          | Firefox / Firefox Android | `*-firefox.zip` | Manifest V3 (Firefox 109+) |
+
+          ### Installation
+
+          **Chrome / Edge / Brave:**
+          1. Download `*-chrome.zip` and extract it
+          2. Open `chrome://extensions` (or `edge://extensions`)
+          3. Enable **Developer Mode**
+          4. Click **Load unpacked** and select the extracted folder
+
+          **Firefox:**
+          1. Download `*-firefox.zip`
+          2. Open `about:debugging` → **This Firefox**
+          3. Click **Load Temporary Add-on** and select the zip file
+
+          **Android (Kiwi Browser):**
+          1. Download `*-chrome.zip` and extract it to your device
+          2. Open Kiwi → Menu → Extensions → Enable Developer Mode
+          3. Load the extracted folder
+
+          ### What's New
+          See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for full details.
+          EOF
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Video Stability Assistant ${{ steps.meta.outputs.tag }}"
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(steps.meta.outputs.tag, '-') }}
+          files: |
+            ${{ steps.meta.outputs.chrome_zip }}
+            ${{ steps.meta.outputs.firefox_zip }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
