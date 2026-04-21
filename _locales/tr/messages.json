@@ -1,0 +1,276 @@
+{
+  "extensionName": {
+    "message": "Video Kararlılık Asistanı",
+    "description": "Tarayıcı arayüzünde gösterilen uzantının görünen adı."
+  },
+  "extensionDescription": {
+    "message": "Kararlılık puanlama, donma tahmini ve eyleme dönüştürülebilir önerilerle gerçek zamanlı video oynatma kalitesi izleme.",
+    "description": "Uzantı yönetim sayfasında gösterilen açıklama."
+  },
+
+  "popupTitle": {
+    "message": "Video Kararlılık Asistanı",
+    "description": "Popup'ın üst kısmında gösterilen başlık."
+  },
+  "popupNoVideo": {
+    "message": "Video tespit edilmedi",
+    "description": "Aktif sekmede video öğesi bulunamadığında popup'ta gösterilen mesaj."
+  },
+  "popupNoVideoHint": {
+    "message": "Kararlılık izlemeye başlamak için oynatılan bir video içeren sayfaya gidin.",
+    "description": "Video yok mesajının altında gösterilen ipucu metni."
+  },
+
+  "scoreLabel": {
+    "message": "Kararlılık Skoru",
+    "description": "Genel kararlılık skoru göstergesi için etiket."
+  },
+  "levelExcellent": {
+    "message": "Mükemmel",
+    "description": "Kararlılık seviyesi: mükemmel (skor ≥ 85)."
+  },
+  "levelGood": {
+    "message": "İyi",
+    "description": "Kararlılık seviyesi: iyi (skor ≥ 65)."
+  },
+  "levelFair": {
+    "message": "Orta",
+    "description": "Kararlılık seviyesi: orta (skor ≥ 45)."
+  },
+  "levelPoor": {
+    "message": "Zayıf",
+    "description": "Kararlılık seviyesi: zayıf (skor ≥ 25)."
+  },
+  "levelCritical": {
+    "message": "Kritik",
+    "description": "Kararlılık seviyesi: kritik (skor < 25)."
+  },
+
+  "factorBufferHealth": {
+    "message": "Tampon Sağlığı",
+    "description": "Tampon sağlığı puanlama faktörü için etiket."
+  },
+  "factorDropRate": {
+    "message": "Kare Düşme Oranı",
+    "description": "Kare düşme oranı puanlama faktörü için etiket."
+  },
+  "factorStallFrequency": {
+    "message": "Durma Sıklığı",
+    "description": "Durma sıklığı puanlama faktörü için etiket."
+  },
+  "factorBitrateStability": {
+    "message": "Bitrate Kararlılığı",
+    "description": "Bitrate kararlılığı puanlama faktörü için etiket."
+  },
+  "factorDecodePerformance": {
+    "message": "Decode Performansı",
+    "description": "Decode performansı puanlama faktörü için etiket."
+  },
+
+  "metricBitrate": {
+    "message": "Bitrate",
+    "description": "Mevcut akış bitrate metrik kartı için etiket."
+  },
+  "metricBandwidth": {
+    "message": "Bant Genişliği",
+    "description": "Mevcut ağ bant genişliği metrik kartı için etiket."
+  },
+  "metricDropRate": {
+    "message": "Düşme Oranı",
+    "description": "Kare düşme oranı metrik kartı için etiket."
+  },
+  "metricDecodeTime": {
+    "message": "Decode Süresi",
+    "description": "Ortalama kare decode süresi metrik kartı için etiket."
+  },
+  "metricBuffer": {
+    "message": "Tampon",
+    "description": "Tampon çubuğu için etiket."
+  },
+  "metricStalls": {
+    "message": "Bu oturumdaki durmalar",
+    "description": "Durma sayısı gösterimi için etiket."
+  },
+
+  "predictionTitle": {
+    "message": "Donma Tahmini",
+    "description": "Donma tahmin paneli için bölüm başlığı."
+  },
+  "predictionSafe": {
+    "message": "Donma Tahmini Yok",
+    "description": "Donma beklenmiyor olduğunda durum mesajı."
+  },
+  "predictionWarn": {
+    "message": "Donma Riski Tespit Edildi",
+    "description": "Donma muhtemel olduğunda durum mesajı."
+  },
+  "predictionProbability": {
+    "message": "Olasılık",
+    "description": "Donma olasılık değeri için etiket."
+  },
+  "predictionEstTime": {
+    "message": "Tahmini Süre",
+    "description": "Donmaya kadar tahmini süre için etiket."
+  },
+  "predictionConfidence": {
+    "message": "Güven",
+    "description": "Tahmin güven seviyesi için etiket."
+  },
+  "predictionConfidenceLow": {
+    "message": "Düşük",
+    "description": "Düşük tahmin güven seviyesi."
+  },
+  "predictionConfidenceMedium": {
+    "message": "Orta",
+    "description": "Orta tahmin güven seviyesi."
+  },
+  "predictionConfidenceHigh": {
+    "message": "Yüksek",
+    "description": "Yüksek tahmin güven seviyesi."
+  },
+
+  "advisoryTitle": {
+    "message": "Öneriler",
+    "description": "Öneri listesi için bölüm başlığı."
+  },
+  "advisoryNone": {
+    "message": "Şu anda öneri yok.",
+    "description": "Aktif öneri olmadığında gösterilen mesaj."
+  },
+  "advisorySuggestedActions": {
+    "message": "Önerilen Eylemler",
+    "description": "Öneri kartı içindeki eylem listesi için alt başlık."
+  },
+
+  "notifTitlePrefix": {
+    "message": "Video Kararlılığı:",
+    "description": "Masaüstü bildirim başlıkları için önek."
+  },
+
+  "modeBalanced": {
+    "message": "Dengeli",
+    "description": "Oynatma modu: dengeli."
+  },
+  "modeLive": {
+    "message": "Canlı",
+    "description": "Oynatma modu: canlı."
+  },
+  "modeVod": {
+    "message": "VOD",
+    "description": "Oynatma modu: talep üzerine video."
+  },
+
+  "settingsTitle": {
+    "message": "Ayarlar",
+    "description": "Seçenekler sayfasının başlığı."
+  },
+  "settingsPlaybackMode": {
+    "message": "Oynatma Modu",
+    "description": "Oynatma modu seçimi için ayarlar bölüm başlığı."
+  },
+  "settingsNotifications": {
+    "message": "Bildirimler",
+    "description": "Bildirim kontrolleri için ayarlar bölüm başlığı."
+  },
+  "settingsSampling": {
+    "message": "Metrik Toplama",
+    "description": "Örnekleme aralığı kontrolleri için ayarlar bölüm başlığı."
+  },
+  "settingsSiteAllowlist": {
+    "message": "Site İzin Listesi",
+    "description": "Site izin listesi için ayarlar bölüm başlığı."
+  },
+  "settingsAdvanced": {
+    "message": "Gelişmiş",
+    "description": "Gelişmiş seçenekler için ayarlar bölüm başlığı."
+  },
+  "settingsAppearance": {
+    "message": "Görünüm",
+    "description": "Tema seçimi için ayarlar bölüm başlığı."
+  },
+  "settingsLanguage": {
+    "message": "Dil",
+    "description": "Dil seçimi için ayarlar bölüm başlığı."
+  },
+  "settingsAdvisoryMode": {
+    "message": "Öneri Modu",
+    "description": "Öneri modu seçimi için ayarlar bölüm başlığı."
+  },
+  "settingsReset": {
+    "message": "Varsayılanlara Sıfırla",
+    "description": "Sıfırlama eylemi için ayarlar bölüm başlığı."
+  },
+
+  "advisoryModeSimple": {
+    "message": "Basit",
+    "description": "Basit öneri modu - teknik olmayan kullanıcılar için."
+  },
+  "advisoryModeTechnical": {
+    "message": "Teknik",
+    "description": "Teknik öneri modu - teknik kullanıcılar için."
+  },
+  "advisoryModeDescription": {
+    "message": "Basit mod teknik olmayan kullanıcılar için anlaşılması kolay öneriler sağlar. Teknik mod daha ayrıntılı, teknik terminoloji içeren öneriler sunar.",
+    "description": "Öneri modu seçimi için açıklama."
+  },
+
+  "languageEn": {
+    "message": "English",
+    "description": "İngilizce dil seçeneği."
+  },
+  "languageTr": {
+    "message": "Türkçe",
+    "description": "Türkçe dil seçeneği."
+  },
+
+  "btnSave": {
+    "message": "Kaydet",
+    "description": "Kaydet düğmesi etiketi."
+  },
+  "btnReset": {
+    "message": "Tüm Ayarları Sıfırla",
+    "description": "Tehlikeli bölgedeki sıfırlama düğmesi etiketi."
+  },
+  "btnConfirmReset": {
+    "message": "Sıfırlamayı Onayla",
+    "description": "Sıfırlama eylemi için onay düğmesi."
+  },
+  "btnCancel": {
+    "message": "İptal",
+    "description": "İptal düğmesi etiketi."
+  },
+  "btnRefresh": {
+    "message": "Yenile",
+    "description": "Yenile düğmesi ipucu."
+  },
+  "btnSettings": {
+    "message": "Ayarlar",
+    "description": "Ayarlar düğmesi ipucu."
+  },
+
+  "statusSaving": {
+    "message": "Kaydediliyor…",
+    "description": "Ayarlar kaydedilirken durum banner metni."
+  },
+  "statusSaved": {
+    "message": "Ayarlar kaydedildi.",
+    "description": "Başarılı kaydetme sonrası durum banner metni."
+  },
+  "statusError": {
+    "message": "Kaydetme başarısız. Lütfen tekrar deneyin.",
+    "description": "Kaydetme başarısız olduğunda durum banner metni."
+  },
+
+  "themeLight": {
+    "message": "Açık",
+    "description": "Açık tema seçenek etiketi."
+  },
+  "themeDark": {
+    "message": "Koyu",
+    "description": "Koyu tema seçenek etiketi."
+  },
+  "themeAuto": {
+    "message": "Sistem",
+    "description": "Sistem tercihi (otomatik) tema seçenek etiketi."
+  }
+}

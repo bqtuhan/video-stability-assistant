@@ -212,11 +212,12 @@ async function maybeNotify(
   }
 
   const notificationId = `vsa-${tabId}-${Date.now()}`;
+  const titlePrefix = chrome.i18n.getMessage('notifTitlePrefix') || 'Video Stability:';
 
   chrome.notifications.create(notificationId, {
     type: 'basic',
     iconUrl: chrome.runtime.getURL('icons/icon48.png'),
-    title: `Video Stability: ${advisory.title}`,
+    title: `${titlePrefix} ${advisory.title}`,
     message: advisory.description,
     priority: advisory.severity === 'critical' ? 2 : 1,
   });
@@ -248,6 +249,8 @@ async function processMetrics(
     metrics,
     score,
     settings.playbackMode,
+    settings.language,
+    settings.advisoryMode,
     metrics.timestamp,
   );
 

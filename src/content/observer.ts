@@ -75,9 +75,7 @@ export class VideoObserver {
       });
     };
 
-    this.sendMetrics = throttle(rawSend as (...args: unknown[]) => void, throttleMs) as (
-      m: VideoMetrics,
-    ) => void;
+    this.sendMetrics = throttle(rawSend as (...args: unknown[]) => void, throttleMs);
   }
 
   // ---------------------------------------------------------------------------
@@ -96,7 +94,7 @@ export class VideoObserver {
     this.scanForVideos();
 
     this.mutationObserver = new MutationObserver(
-      throttle(this.handleMutation.bind(this) as (...args: unknown[]) => void, 300) as MutationCallback,
+      throttle(this.handleMutation.bind(this) as (...args: unknown[]) => void, 300),
     );
 
     this.mutationObserver.observe(document.documentElement, {

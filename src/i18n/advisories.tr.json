@@ -1,0 +1,230 @@
+{
+  "BUFFER_CRITICAL": {
+    "simple": {
+      "title": "Tampon Kritik Seviyede Düşük",
+      "description": "Videonuz yakında donabilir. Oynatmaya hazır 2 saniyeden az video var.",
+      "actions": [
+        "Videoyu 10-20 saniye duraklatın ve daha fazla yüklenmesini bekleyin",
+        "Mümkünse video kalitesini düşürün",
+        "İnternet kullanan diğer uygulamaları veya tarayıcı sekmelerini kapatın",
+        "Hiçbir şey işe yaramazsa sayfayı yenilemeyi deneyin"
+      ]
+    },
+    "technical": {
+      "title": "Tampon Kritik Seviyede Düşük",
+      "description": "Tampon seviyesi < 2s. Rebuffering olayı yakın. Sürekli oynatmayı sürdürmek için yetersiz önceden yüklenmiş içerik.",
+      "actions": [
+        "Tampon derinliğini yeniden oluşturmak için oynatmayı 10-20s duraklatın",
+        "Kalite seviyesini düşürün (ABR manuel geçersiz kılma)",
+        "Eşzamanlı bant genişliği yoğun işlemleri sonlandırın",
+        "CDN bağlantısını yeniden kurmak için sabit yenileme yapın (Ctrl+Shift+R)"
+      ]
+    }
+  },
+  "STALL_RECENT": {
+    "simple": {
+      "title": "Yakın Zamanda Oynatma Donması",
+      "description": "Videonuz yakın zamanda dondu ({seconds} saniye önce). Bu oturumda {count} donma yaşadınız.",
+      "actions": [
+        "Video kalitesini düşürün",
+        "İnternet kullanan diğer uygulamaları kapatın",
+        "VPN veya proxy'nin bağlantınızı yavaşlatıp yavaşlatmadığını kontrol edin",
+        "Wi-Fi yerine kablolu bağlantı kullanmayı deneyin"
+      ]
+    },
+    "technical": {
+      "title": "Yakın Zamanda Oynatma Durması",
+      "description": "{seconds}s önce durma tespit edildi. Oturum durma sayısı: {count}. Ağ tıkanıklığı veya decode kararsızlığına işaret eder.",
+      "actions": [
+        "Bitrate gereksinimlerini azaltmak için kalite seviyesini düşürün",
+        "Bant genişliği tüketen arka plan işlemlerini kapatın",
+        "VPN/proxy'nin işlem hızını kısıtlamadığını doğrulayın",
+        "Wi-Fi gecikme değişkenliğini ortadan kaldırmak için Ethernet'e geçin"
+      ]
+    }
+  },
+  "BANDWIDTH_DEFICIT": {
+    "simple": {
+      "title": "Yetersiz İnternet Hızı",
+      "description": "Video {required} kbps gerektirir ancak sadece {available} kbps mevcut. {deficit} kbps eksik.",
+      "actions": [
+        "Daha düşük kalite seçin (1080p yerine 720p gibi)",
+        "Tüm indirmeleri veya yüklemeleri durdurun",
+        "İnternet sağlayıcınızın sorun yaşayıp yaşamadığını kontrol edin"
+      ]
+    },
+    "technical": {
+      "title": "Mevcut Bitrate için Yetersiz Bant Genişliği",
+      "description": "Akış bitrate: ~{required} kbps. Mevcut bant genişliği: ~{available} kbps. Eksiklik: {deficit} kbps. Yüksek rebuffering olasılığı.",
+      "actions": [
+        "Daha düşük kalite seviyesi seçin (1080p → 720p → 480p)",
+        "Eşzamanlı yüklemeleri/indirmeleri askıya alın",
+        "Ağ tanılamaları aracılığıyla ISP tıkanıklık durumunu izleyin"
+      ]
+    }
+  },
+  "DROP_RATE_HIGH": {
+    "simple": {
+      "title": "Yüksek Kare Düşme Oranı",
+      "description": "Cihazınız video karelerinin %{rate}'ini düşürüyor. Bu takılmalara ve hoppalamalara neden olur.",
+      "actions": [
+        "Oyunları veya diğer ağır programları kapatın",
+        "Tarayıcı ayarlarında donanım hızlandırmayı kapatın ve yeniden başlatın",
+        "Video çözünürlüğünü düşürün",
+        "Grafik sürücülerinizi güncelleyin"
+      ]
+    },
+    "technical": {
+      "title": "Yüksek Kare Düşme Oranı",
+      "description": "Kare düşme oranı: %{rate}. GPU decode darboğazı veya sistem kaynak çekişmesine işaret eder. Gözlemlenebilir kare zamanlama titremesi.",
+      "actions": [
+        "GPU yoğun işlemleri sonlandırın (3D rendering, oyun)",
+        "Donanım hızlandırmayı devre dışı bırakın (tarayıcı ayarları → yeniden başlatma gerekli)",
+        "Çözünürlük düşürme yoluyla decode iş yükünü azaltın",
+        "GPU sürücülerini en son kararlı sürüme güncelleyin"
+      ]
+    }
+  },
+  "BUFFER_LOW": {
+    "simple": {
+      "title": "Tampon Azalıyor",
+      "description": "Sadece {buffer}s video önceden yüklenmiş. İnternetiniz yavaşlarsa video donabilir.",
+      "actions": [
+        "Birkaç saniye duraklatın ve daha fazla videonun yüklenmesini bekleyin",
+        "Kaliteyi bir seviye düşürmeyi düşünün"
+      ]
+    },
+    "technical": {
+      "title": "Tampon Azalıyor",
+      "description": "Tampon derinliği: {buffer}s. Optimal eşiğin altında (8s+). Ağ koşullarının kötüleşmesine karşı savunmasız.",
+      "actions": [
+        "Tampon derinliğini artırmak için geçici olarak duraklatın",
+        "Tampon dolum hızını iyileştirmek için kalite seviyesini bir seviye düşürün"
+      ]
+    }
+  },
+  "BITRATE_UNSTABLE": {
+    "simple": {
+      "title": "Kararsız Video Kalitesi",
+      "description": "Video kalitesi sürekli değişiyor. Bu genellikle kararsız internet bağlantısından kaynaklanır.",
+      "actions": [
+        "Oynatıcınız izin veriyorsa videoyu belirli bir kaliteye kilitleyin",
+        "Wi-Fi yönlendiricinize yaklaşın veya kablo kullanın",
+        "Platform destekliyorsa farklı sunucu deneyin"
+      ]
+    },
+    "technical": {
+      "title": "Bitrate Kararsızlığı",
+      "description": "Önemli bitrate varyansı tespit edildi. ABR algoritması sık kalite seviyesi geçişleri yapıyor. Gözlemlenebilir kalite salınımı.",
+      "actions": [
+        "ABR'yi devre dışı bırakın ve kaliteyi sabit seviyeye kilitleyin (manuel geçersiz kılma)",
+        "Wi-Fi yol kaybını azaltın (AP'ye yakınlık) veya Ethernet'e geçin",
+        "Platform kenar seçimini destekliyorsa alternatif CDN bölgesi seçin"
+      ]
+    }
+  },
+  "DECODE_SLOW": {
+    "simple": {
+      "title": "Yavaş Kare İşleme",
+      "description": "Cihazınız her kareyi işlemek için {time}ms alıyor. Bu çok yavaş ve takılmalara neden oluyor.",
+      "actions": [
+        "Tarayıcı ayarlarında donanım hızlandırmayı açın",
+        "Video çözünürlüğünü düşürün",
+        "Diğer tarayıcı sekmelerini ve programları kapatın"
+      ]
+    },
+    "technical": {
+      "title": "Decode Performansı Düştü",
+      "description": "Ortalama decode süresi: {time}ms. Düzgün oynatma için gerçek zamanlı bütçeyi aşıyor. Potansiyel kare zamanlama ihlalleri.",
+      "actions": [
+        "Donanım hızlandırmalı decode'u etkinleştirin (tarayıcı ayarları)",
+        "Çözünürlük düşürme yoluyla decode karmaşıklığını azaltın",
+        "Eşzamanlı tarayıcı sekmelerini ve arka plan işlemlerini sonlandırın"
+      ]
+    }
+  },
+  "STALL_RECURRING": {
+    "simple": {
+      "title": "Tekrarlayan Donmalar",
+      "description": "Bu oturumda toplam {duration}s kayıp süre ile {count} donma yaşadınız. Muhtemelen kalıcı bir sorun var.",
+      "actions": [
+        "fast.com veya speedtest.net'te internet hızınızı test edin",
+        "Farklı sunucu denemek için sayfayı yenileyin",
+        "Sorunu bulmak için mobil veri ve Wi-Fi arasında geçiş yapmayı deneyin"
+      ]
+    },
+    "technical": {
+      "title": "Tekrarlayan Durma Deseni",
+      "description": "Oturum durma sayısı: {count}. Toplam durma süresi: {duration}s. Kalıcı ağ veya kaynak sunucu sorununa işaret eder.",
+      "actions": [
+        "Bant genişliği tanılaması yapın (fast.com / speedtest.net)",
+        "CDN bağlantısını yeniden kurmak için sabit yenileme yapın",
+        "Sorunu izole etmek için ağ arayüzünü değiştirin (hücresel ↔ Wi-Fi)"
+      ]
+    }
+  },
+  "SCORE_GOOD": {
+    "simple": {
+      "title": "Oynatma Kararlı",
+      "description": "Her şey iyi görünüyor. Videonuz sorunsuz şekilde oynatılıyor ve hiçbir sorun tespit edilmedi.",
+      "actions": []
+    },
+    "technical": {
+      "title": "Optimal Oynatma Koşulları",
+      "description": "Tüm kalite metrikleri kabul edilebilir eşikler dahilinde. Düzeltici eylem gerekmiyor.",
+      "actions": []
+    }
+  },
+  "LOW_READYSTATE": {
+    "simple": {
+      "title": "Oynatıcı Hazır Değil",
+      "description": "Video oynatıcı yükleniyor (durum {state}). Oynatmaya başlamak için henüz yeterli veriye sahip değil.",
+      "actions": [
+        "İlk yüklemenin tamamlanmasını bekleyin",
+        "15 saniyeden fazla takılı kalırsa yenilemeyi deneyin"
+      ]
+    },
+    "technical": {
+      "title": "Yetersiz ReadyState",
+      "description": "Medya öğesi readyState: {state}. HAVE_FUTURE_DATA'nın (3) altında. İlk tampon dolumunu bekliyor.",
+      "actions": [
+        "İlk tampon dolumunun tamamlanmasına izin verin",
+        "Durum >15s boyunca < 3 kalırsa sabit yenileme yapın"
+      ]
+    }
+  },
+  "HIGH_PLAYBACK_RATE": {
+    "simple": {
+      "title": "Hızlı Oynatma",
+      "description": "{rate}× hızda oynatıyorsunuz. Video sistemi hızlı oynatma için optimize edilmediğinden kalite skorları daha düşük olabilir.",
+      "actions": [
+        "Hızlı oynatma sırasındaki kararlılık skorlarının normal performansı yansıtmayabileceğini unutmayın"
+      ]
+    },
+    "technical": {
+      "title": "Standart Dışı Oynatma Hızı",
+      "description": "Oynatma hızı: {rate}×. Tamponlama stratejileri hızlandırılmış oynatma için kalibre edilmemiş. Metrikler nominal işlemden sapabilir.",
+      "actions": [
+        ">1.5× hızlarda kararlılık skorlarını dikkatle yorumlayın (tamponlama sezgisel yöntemleri 1.0× için optimize edilmiş)"
+      ]
+    }
+  },
+  "LIVE_BUFFER_LARGE": {
+    "simple": {
+      "title": "Yüksek Canlı Yayın Gecikmesi",
+      "description": "Canlı yayında {buffer}s tamponunuz var. Gerçek canlı yayının önemli ölçüde gerisinde izliyorsunuz.",
+      "actions": [
+        "Mevcutsa 'canlıya git' düğmesine tıklayın",
+        "Canlı senkronizasyon düğmesi yoksa sayfayı yenileyin"
+      ]
+    },
+    "technical": {
+      "title": "Yüksek Canlı Yayın Gecikmesi",
+      "description": "Canlı yayın tampon derinliği: {buffer}s. İzleme konumu canlı kenarın önemli ölçüde gerisinde. Yüksek cam-cam gecikmesi.",
+      "actions": [
+        "Canlı kenar yeniden senkronizasyonu uygulayın (oynatıcı UI 'canlıya git' kontrolü)",
+        "Canlı senkronizasyon kontrolü mevcut değilse sabit yenileme yapın"
+      ]
+    }
+  }
+}

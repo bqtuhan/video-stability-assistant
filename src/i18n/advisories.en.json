@@ -1,0 +1,230 @@
+{
+  "BUFFER_CRITICAL": {
+    "simple": {
+      "title": "Buffer Critically Low",
+      "description": "Your video might freeze soon. Less than 2 seconds of video is ready to play.",
+      "actions": [
+        "Pause the video for 10-20 seconds to let it load more",
+        "Lower the video quality if possible",
+        "Close other apps or browser tabs using internet",
+        "Try refreshing the page if nothing helps"
+      ]
+    },
+    "technical": {
+      "title": "Buffer Critically Low",
+      "description": "Buffer level < 2s. Rebuffering event imminent. Insufficient pre-loaded content to maintain continuous playback.",
+      "actions": [
+        "Pause playback for 10-20s to rebuild buffer depth",
+        "Reduce quality tier (ABR manual override)",
+        "Terminate concurrent bandwidth-intensive processes",
+        "Perform hard refresh (Ctrl+Shift+R) to re-establish CDN connection"
+      ]
+    }
+  },
+  "STALL_RECENT": {
+    "simple": {
+      "title": "Recent Playback Stall",
+      "description": "Your video froze recently ({seconds}s ago). You've had {count} freeze(s) this session.",
+      "actions": [
+        "Lower the video quality",
+        "Close other apps using internet",
+        "Check if a VPN or proxy is slowing your connection",
+        "Try using a wired connection instead of Wi-Fi"
+      ]
+    },
+    "technical": {
+      "title": "Recent Playback Stall",
+      "description": "Stall detected {seconds}s ago. Session stall count: {count}. Indicates network congestion or decode instability.",
+      "actions": [
+        "Decrease quality tier to reduce bitrate requirements",
+        "Close background processes consuming bandwidth",
+        "Verify VPN/proxy is not throttling throughput",
+        "Switch to Ethernet to eliminate Wi-Fi latency variability"
+      ]
+    }
+  },
+  "BANDWIDTH_DEFICIT": {
+    "simple": {
+      "title": "Not Enough Internet Speed",
+      "description": "The video needs {required} kbps but you only have {available} kbps. Missing {deficit} kbps.",
+      "actions": [
+        "Choose a lower quality (like 720p instead of 1080p)",
+        "Stop any downloads or uploads",
+        "Check if your internet provider is having issues"
+      ]
+    },
+    "technical": {
+      "title": "Bandwidth Insufficient for Current Bitrate",
+      "description": "Stream bitrate: ~{required} kbps. Available bandwidth: ~{available} kbps. Deficit: {deficit} kbps. High rebuffering probability.",
+      "actions": [
+        "Select lower quality tier (1080p → 720p → 480p)",
+        "Suspend concurrent uploads/downloads",
+        "Monitor ISP congestion status via network diagnostics"
+      ]
+    }
+  },
+  "DROP_RATE_HIGH": {
+    "simple": {
+      "title": "High Frame Drop Rate",
+      "description": "Your device is dropping {rate}% of video frames. This causes stuttering and choppy video.",
+      "actions": [
+        "Close games or other heavy programs",
+        "Turn off hardware acceleration in browser settings and restart",
+        "Lower the video resolution",
+        "Update your graphics drivers"
+      ]
+    },
+    "technical": {
+      "title": "High Frame Drop Rate",
+      "description": "Frame drop rate: {rate}%. Indicates GPU decode bottleneck or system resource contention. Observable frame timing jitter.",
+      "actions": [
+        "Terminate GPU-intensive processes (3D rendering, gaming)",
+        "Disable hardware acceleration (browser settings → restart required)",
+        "Reduce decode workload via resolution downgrade",
+        "Update GPU drivers to latest stable release"
+      ]
+    }
+  },
+  "BUFFER_LOW": {
+    "simple": {
+      "title": "Buffer Running Low",
+      "description": "Only {buffer}s of video is loaded ahead. If your internet slows down, the video might freeze.",
+      "actions": [
+        "Pause for a few seconds to let more video load",
+        "Consider lowering the quality by one level"
+      ]
+    },
+    "technical": {
+      "title": "Buffer Running Low",
+      "description": "Buffer depth: {buffer}s. Below optimal threshold (8s+). Vulnerable to network condition degradation.",
+      "actions": [
+        "Pause temporarily to increase buffer depth",
+        "Reduce quality tier by one level to improve buffer fill rate"
+      ]
+    }
+  },
+  "BITRATE_UNSTABLE": {
+    "simple": {
+      "title": "Unstable Video Quality",
+      "description": "The video quality keeps changing frequently. This is usually caused by unstable internet connection.",
+      "actions": [
+        "Lock the video to a specific quality if your player allows it",
+        "Move closer to your Wi-Fi router or use a cable",
+        "Try a different server if the platform supports it"
+      ]
+    },
+    "technical": {
+      "title": "Bitrate Instability",
+      "description": "Significant bitrate variance detected. ABR algorithm performing frequent quality tier switches. Observable quality oscillation.",
+      "actions": [
+        "Disable ABR and pin quality to fixed tier (manual override)",
+        "Reduce Wi-Fi path loss (proximity to AP) or switch to Ethernet",
+        "Select alternate CDN region if platform supports edge selection"
+      ]
+    }
+  },
+  "DECODE_SLOW": {
+    "simple": {
+      "title": "Slow Frame Processing",
+      "description": "Your device is taking {time}ms to process each frame. This is too slow and causes stuttering.",
+      "actions": [
+        "Turn on hardware acceleration in browser settings",
+        "Lower the video resolution",
+        "Close other browser tabs and programs"
+      ]
+    },
+    "technical": {
+      "title": "Decode Performance Degraded",
+      "description": "Average decode time: {time}ms. Exceeds real-time budget for smooth playback. Potential frame timing violations.",
+      "actions": [
+        "Enable hardware-accelerated decode (browser settings)",
+        "Reduce decode complexity via resolution downgrade",
+        "Terminate concurrent browser tabs and background processes"
+      ]
+    }
+  },
+  "STALL_RECURRING": {
+    "simple": {
+      "title": "Multiple Freezes",
+      "description": "You've had {count} freezes this session, totaling {duration}s of lost time. There's likely a persistent issue.",
+      "actions": [
+        "Test your internet speed at fast.com or speedtest.net",
+        "Refresh the page to try a different server",
+        "Try switching between mobile data and Wi-Fi to find the issue"
+      ]
+    },
+    "technical": {
+      "title": "Recurring Stall Pattern",
+      "description": "Session stall count: {count}. Total stall duration: {duration}s. Indicates persistent network or origin server issue.",
+      "actions": [
+        "Perform bandwidth diagnostic (fast.com / speedtest.net)",
+        "Hard refresh to re-establish CDN connection",
+        "Switch network interface (cellular ↔ Wi-Fi) to isolate issue"
+      ]
+    }
+  },
+  "SCORE_GOOD": {
+    "simple": {
+      "title": "Playback Stable",
+      "description": "Everything looks good. Your video is playing smoothly with no issues detected.",
+      "actions": []
+    },
+    "technical": {
+      "title": "Optimal Playback Conditions",
+      "description": "All quality metrics within acceptable thresholds. No corrective action required.",
+      "actions": []
+    }
+  },
+  "LOW_READYSTATE": {
+    "simple": {
+      "title": "Player Not Ready",
+      "description": "The video player is loading (state {state}). It doesn't have enough data to start playing yet.",
+      "actions": [
+        "Wait for the initial loading to complete",
+        "If it's stuck for more than 15 seconds, try refreshing"
+      ]
+    },
+    "technical": {
+      "title": "Insufficient ReadyState",
+      "description": "Media element readyState: {state}. Below HAVE_FUTURE_DATA (3). Waiting for initial buffer fill.",
+      "actions": [
+        "Allow initial buffer fill to complete",
+        "Hard refresh if state remains < 3 for >15s"
+      ]
+    }
+  },
+  "HIGH_PLAYBACK_RATE": {
+    "simple": {
+      "title": "Fast Playback Speed",
+      "description": "You're playing at {rate}× speed. Quality scores may be lower because the video system isn't optimized for fast playback.",
+      "actions": [
+        "Keep in mind that stability scores during fast playback may not reflect normal performance"
+      ]
+    },
+    "technical": {
+      "title": "Non-Standard Playback Rate",
+      "description": "Playback rate: {rate}×. Buffering strategies not calibrated for accelerated playback. Metrics may deviate from nominal operation.",
+      "actions": [
+        "Interpret stability scores at rates >1.5× with caution (buffering heuristics optimized for 1.0×)"
+      ]
+    }
+  },
+  "LIVE_BUFFER_LARGE": {
+    "simple": {
+      "title": "High Live Stream Delay",
+      "description": "You have {buffer}s of buffer on a live stream. You're watching significantly behind the actual live broadcast.",
+      "actions": [
+        "Click the 'go to live' button if available",
+        "Refresh the page if there's no live sync button"
+      ]
+    },
+    "technical": {
+      "title": "Elevated Live Stream Latency",
+      "description": "Live stream buffer depth: {buffer}s. Viewing position significantly behind live edge. High glass-to-glass latency.",
+      "actions": [
+        "Execute live edge re-synchronization (player UI 'go to live' control)",
+        "Hard refresh if live sync control unavailable"
+      ]
+    }
+  }
+}

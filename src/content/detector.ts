@@ -175,7 +175,7 @@ function listenForNavigationChanges(): void {
 
   // Poll via MutationObserver on the title element (changes on SPA nav).
   const titleObserver = new MutationObserver(
-    checkNavigation as MutationCallback,
+    checkNavigation,
   );
 
   const titleEl = document.querySelector('title');
@@ -185,7 +185,7 @@ function listenForNavigationChanges(): void {
 
   // Also observe the document body's immediate children for SPA root changes.
   const bodyObserver = new MutationObserver(
-    checkNavigation as MutationCallback,
+    checkNavigation,
   );
 
   if (document.body) {

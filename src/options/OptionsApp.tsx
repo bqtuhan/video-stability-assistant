@@ -14,7 +14,8 @@
  * 5. Site Allowlist     – Per-hostname enable/disable controls.
  * 6. Advanced           – Prediction toggle, advanced metrics display.
  * 7. Appearance         – Light / dark / auto theme selection.
- * 8. Danger Zone        – Reset to defaults.
+ * 8. Language & Mode    – i18n language and advisory mode settings.
+ * 9. Danger Zone        – Reset to defaults.
  *
  * @repository  github.com/bqtuhan/video-stability-assistant
  * @license     Apache-2.0
@@ -27,8 +28,10 @@ import {
   type ExtensionMessage,
   type PlaybackMode,
   type StabilityLevel,
+  type Language,
+  type AdvisoryMode,
 } from '../types';
-import { getWeights } from '../engines/scoring';
+
 import { shallowMerge } from '../utils';
 
 // ---------------------------------------------------------------------------
@@ -123,7 +126,7 @@ const OptionsApp: React.FC = () => {
   const [newSite, setNewSite] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
 
-  const weights = getWeights(settings.playbackMode);
+  
 
   if (loading) {
     return (
@@ -147,6 +150,9 @@ const OptionsApp: React.FC = () => {
     patch({ enabledSites: settings.enabledSites.filter((s) => s !== site) });
   };
 
+  // Helper for localized strings from manifest/messages.json
+  const t = (key: string) => chrome.i18n.getMessage(key) || key;
+
   return (
     <div style={pageStyle}>
       <div style={containerStyle}>
@@ -156,11 +162,11 @@ const OptionsApp: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
             <img src={chrome.runtime.getURL('icons/icon48.png')} width={32} height={32} alt="" style={{ borderRadius: 6 }} />
             <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#111827' }}>
-              Video Stability Assistant
+              {t('settingsTitle')}
             </h1>
           </div>
           <p style={{ margin: 0, fontSize: 13, color: '#6b7280' }}>
-            v{chrome.runtime.getManifest().version} · Settings
+            v{chrome.runtime.getManifest().version} · {t('settingsAdvanced')}
           </p>
         </header>
 
@@ -176,15 +182,15 @@ const OptionsApp: React.FC = () => {
             fontWeight: 500,
             color: saveStatus === 'saved' ? '#15803d' : saveStatus === 'error' ? '#dc2626' : '#1d4ed8',
           }}>
-            {saveStatus === 'saving' ? '⏳ Saving…' : saveStatus === 'saved' ? '✅ Settings saved.' : '❌ Save failed. Please try again.'}
+            {saveStatus === 'saving' ? `⏳ ${t('statusSaving')}` : saveStatus === 'saved' ? `✅ ${t('statusSaved')}` : `❌ ${t('statusError')}`}
           </div>
         )}
 
         {/* ── Section: Playback Mode ── */}
-        <Section title="Playback Mode" description="Select the scoring-weight preset that matches your viewing context.">
+        <Section title={t('settingsPlaybackMode')} description="Select the scoring-weight preset that matches your viewing context.">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
             {(['balanced', 'live', 'vod'] as PlaybackMode[]).map((mode) => {
-              const labels = { balanced: '⚖️ Balanced', live: '📡 Live', vod: '🎬 VOD' };
+              const labels = { balanced: `⚖️ ${t('modeBalanced')}`, live: `📡 ${t('modeLive')}`, vod: `🎬 ${t('modeVod')}` };
               const descs = {
                 balanced: 'General-purpose. Equal emphasis across all factors.',
                 live: 'Prioritises low-latency and stall prevention for live streams.',
@@ -217,33 +223,37 @@ const OptionsApp: React.FC = () => {
           </div>
         </Section>
 
-        {/* ── Section: Scoring Weights ── */}
-        <Section title="Active Scoring Weights" description={`Weight distribution for "${settings.playbackMode}" mode. Weights must sum to 100%.`}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {(Object.entries(weights) as [string, number][]).map(([key, w]) => {
-              const labels: Record<string, string> = {
-                bufferHealth: 'Buffer Health',
-                dropRate: 'Frame Drop Rate',
-                stallFrequency: 'Stall Frequency',
-                bitrateStability: 'Bitrate Stability',
-                decodePerformance: 'Decode Performance',
-              };
-              const pct = Math.round(w * 100);
-              return (
-                <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 12, color: '#374151', width: 160, flexShrink: 0 }}>{labels[key]}</span>
-                  <div style={{ flex: 1, height: 8, borderRadius: 4, background: '#e5e7eb', overflow: 'hidden' }}>
-                    <div style={{ width: `${pct}%`, height: '100%', background: '#3b82f6', borderRadius: 4, transition: 'width 0.4s ease' }} />
-                  </div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: '#1d4ed8', width: 36, textAlign: 'right' }}>{pct}%</span>
-                </div>
-              );
-            })}
+        {/* ── Section: Language & Mode ── */}
+        <Section title={t('settingsLanguage')} description="Configure the language and advisory detail level.">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            <div>
+              <Label>{t('settingsLanguage')}</Label>
+              <select
+                value={settings.language}
+                onChange={(e) => patch({ language: e.target.value as Language })}
+                style={selectStyle}
+              >
+                <option value="en">{t('languageEn')}</option>
+                <option value="tr">{t('languageTr')}</option>
+              </select>
+            </div>
+            <div>
+              <Label>{t('settingsAdvisoryMode')}</Label>
+              <select
+                value={settings.advisoryMode}
+                onChange={(e) => patch({ advisoryMode: e.target.value as AdvisoryMode })}
+                style={selectStyle}
+              >
+                <option value="simple">{t('advisoryModeSimple')}</option>
+                <option value="technical">{t('advisoryModeTechnical')}</option>
+              </select>
+            </div>
           </div>
+          <p style={{ ...descStyle, marginTop: 12 }}>{t('advisoryModeDescription')}</p>
         </Section>
 
         {/* ── Section: Notifications ── */}
-        <Section title="Notifications" description="Configure desktop notifications for stability events.">
+        <Section title={t('settingsNotifications')} description="Configure desktop notifications for stability events.">
           <ToggleRow
             label="Enable desktop notifications"
             description="Show system notifications when stability drops below the threshold."
@@ -261,149 +271,105 @@ const OptionsApp: React.FC = () => {
                 style={selectStyle}
               >
                 <option value="excellent">Excellent (always notify)</option>
-                <option value="good">Good</option>
-                <option value="fair">Fair</option>
-                <option value="poor">Poor (recommended)</option>
+                <option value="good">Good and below</option>
+                <option value="fair">Fair and below</option>
+                <option value="poor">Poor and below</option>
                 <option value="critical">Critical only</option>
               </select>
             </div>
           )}
         </Section>
 
-        {/* ── Section: Sampling ── */}
-        <Section title="Metrics Collection" description="Controls how frequently metrics are sampled from the video element.">
-          <Label>Sampling interval</Label>
-          <p style={descStyle}>Shorter intervals yield more responsive data but increase CPU usage. Range: 500–5000 ms.</p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
-            <input
-              type="range"
-              min={500}
-              max={5000}
-              step={100}
-              value={settings.samplingIntervalMs}
-              onChange={(e) => patch({ samplingIntervalMs: Number(e.target.value) })}
-              style={{ flex: 1 }}
-              aria-label="Sampling interval"
-            />
-            <span style={{ fontSize: 13, fontWeight: 600, color: '#1d4ed8', minWidth: 60, textAlign: 'right' }}>
-              {settings.samplingIntervalMs} ms
-            </span>
-          </div>
-        </Section>
-
         {/* ── Section: Site Allowlist ── */}
-        <Section title="Site Allowlist" description="When the allowlist is empty the extension monitors all sites. Add hostnames to restrict monitoring to specific domains.">
+        <Section title={t('settingsSiteAllowlist')} description="Restrict monitoring to specific hostnames. If empty, all sites are enabled.">
           <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
             <input
               type="text"
+              placeholder="e.g. youtube.com"
               value={newSite}
               onChange={(e) => setNewSite(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && addSite()}
-              placeholder="e.g. youtube.com"
               style={{ ...inputStyle, flex: 1 }}
-              aria-label="Add site to allowlist"
             />
-            <button onClick={addSite} style={primaryBtnStyle}>
-              Add
-            </button>
+            <button onClick={addSite} style={primaryBtnStyle}>Add</button>
           </div>
-
-          {settings.enabledSites.length === 0 ? (
-            <p style={{ margin: 0, fontSize: 12, color: '#6b7280' }}>
-              All sites are currently monitored.
-            </p>
-          ) : (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {settings.enabledSites.map((site) => (
-                <div
-                  key={site}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    padding: '4px 10px',
-                    borderRadius: 20,
-                    background: '#eff6ff',
-                    border: '1px solid #bfdbfe',
-                  }}
-                >
-                  <span style={{ fontSize: 12, color: '#1d4ed8', fontWeight: 500 }}>{site}</span>
+          
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {settings.enabledSites.length === 0 ? (
+              <p style={{ fontSize: 12, color: '#9ca3af', fontStyle: 'italic' }}>Monitoring all websites.</p>
+            ) : (
+              settings.enabledSites.map((site) => (
+                <div key={site} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '4px 10px',
+                  background: '#f3f4f6',
+                  borderRadius: 100,
+                  fontSize: 12,
+                  color: '#374151',
+                  border: '1px solid #e5e7eb'
+                }}>
+                  {site}
                   <button
                     onClick={() => removeSite(site)}
-                    style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 12, color: '#6b7280', padding: 0, lineHeight: 1 }}
-                    aria-label={`Remove ${site}`}
+                    style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer', color: '#9ca3af', fontSize: 14, fontWeight: 700 }}
                   >
                     ×
                   </button>
                 </div>
-              ))}
-            </div>
-          )}
-        </Section>
-
-        {/* ── Section: Advanced ── */}
-        <Section title="Advanced" description="Fine-grained controls for power users.">
-          <ToggleRow
-            label="Enable freeze prediction"
-            description="Predict whether a playback freeze is imminent based on buffer trend and drop-rate analysis."
-            checked={settings.enablePrediction}
-            onChange={(v) => patch({ enablePrediction: v })}
-          />
-          <div style={{ marginTop: 16 }}>
-            <ToggleRow
-              label="Show advanced metrics in popup"
-              description="Display buffer behind, readyState, and playback rate in the popup's metric grid."
-              checked={settings.showAdvancedMetrics}
-              onChange={(v) => patch({ showAdvancedMetrics: v })}
-            />
+              ))
+            )}
           </div>
         </Section>
 
-        {/* ── Section: Appearance ── */}
-        <Section title="Appearance" description="Select the colour theme for the extension UI.">
-          <div style={{ display: 'flex', gap: 8 }}>
-            {(['light', 'dark', 'auto'] as const).map((theme) => {
-              const labels = { light: '☀️ Light', dark: '🌙 Dark', auto: '🖥 System' };
-              const isActive = settings.theme === theme;
-              return (
-                <button
-                  key={theme}
-                  onClick={() => patch({ theme })}
-                  style={{
-                    flex: 1,
-                    padding: '10px 8px',
-                    borderRadius: 8,
-                    border: isActive ? '2px solid #3b82f6' : '2px solid #e5e7eb',
-                    background: isActive ? '#eff6ff' : '#f9fafb',
-                    fontSize: 13,
-                    fontWeight: isActive ? 700 : 500,
-                    color: isActive ? '#1d4ed8' : '#374151',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  {labels[theme]}
-                </button>
-              );
-            })}
+        {/* ── Section: Advanced ── */}
+        <Section title={t('settingsAdvanced')} description="Experimental features and developer metrics.">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <ToggleRow
+              label="Enable Freeze Prediction"
+              description="Uses buffer-drain algorithms to predict imminent playback freezes."
+              checked={settings.enablePrediction}
+              onChange={(v) => patch({ enablePrediction: v })}
+            />
+            <ToggleRow
+              label="Show Advanced Metrics"
+              description="Displays detailed technical metrics like Ready State and Decode Time in the popup."
+              checked={settings.showAdvancedMetrics}
+              onChange={(v) => patch({ showAdvancedMetrics: v })}
+            />
+            <div>
+              <Label>Sampling Interval</Label>
+              <p style={descStyle}>Frequency of metric collection. Lower values increase precision but use more CPU.</p>
+              <select
+                value={settings.samplingIntervalMs}
+                onChange={(e) => patch({ samplingIntervalMs: parseInt(e.target.value) })}
+                style={selectStyle}
+              >
+                <option value={500}>500ms (High precision)</option>
+                <option value={1000}>1000ms (Default)</option>
+                <option value={2000}>2000ms (Power saving)</option>
+                <option value={5000}>5000ms (Minimal)</option>
+              </select>
+            </div>
           </div>
         </Section>
 
         {/* ── Section: Danger Zone ── */}
-        <Section title="Reset to Defaults" description="Restores all settings to their factory defaults. This action cannot be undone.">
+        <Section title="Danger Zone">
           {confirmReset ? (
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div style={{ display: 'flex', gap: 10 }}>
               <button
-                onClick={() => { void (async () => { await reset(); })(); setConfirmReset(false); }}
+                onClick={() => { void reset(); setConfirmReset(false); }}
                 style={{ ...primaryBtnStyle, background: '#ef4444' }}
               >
-                Confirm Reset
+                {t('btnConfirmReset')}
               </button>
               <button
                 onClick={() => setConfirmReset(false)}
                 style={secondaryBtnStyle}
               >
-                Cancel
+                {t('btnCancel')}
               </button>
             </div>
           ) : (
@@ -411,21 +377,21 @@ const OptionsApp: React.FC = () => {
               onClick={() => setConfirmReset(true)}
               style={{ ...secondaryBtnStyle, borderColor: '#ef4444', color: '#ef4444' }}
             >
-              Reset All Settings
+              {t('btnReset')}
             </button>
           )}
         </Section>
 
         {/* ── Footer ── */}
         <footer style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#9ca3af' }}>
-          <span>© {new Date().getFullYear()} bqtuhan · Apache 2.0</span>
+          <span>© 2026 bqtuhan · Apache 2.0</span>
           <a
             href="https://github.com/bqtuhan/video-stability-assistant"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: '#9ca3af', textDecoration: 'none' }}
           >
-            View on GitHub
+            GitHub
           </a>
         </footer>
       </div>
@@ -468,7 +434,7 @@ const ToggleRow: React.FC<ToggleRowProps> = ({ label, description, checked, onCh
     <button
       role="switch"
       aria-checked={checked}
-      onClick={() => onChange(!checked)}
+      onClick={() => { void onChange(!checked); }}
       style={{
         flexShrink: 0,
         width: 44,

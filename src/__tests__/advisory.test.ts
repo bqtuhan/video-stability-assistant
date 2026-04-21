@@ -59,13 +59,13 @@ function scoreFor(metrics: VideoMetrics) {
 describe('evaluateAdvisories – rule firing', () => {
   it('fires BUFFER_CRITICAL when buffer < 2s and not paused', () => {
     const m = makeMetrics({ bufferAhead: 1.2 });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(advisories.some((a: any) => a.code === 'BUFFER_CRITICAL')).toBe(true);
   });
 
   it('does NOT fire BUFFER_CRITICAL when paused', () => {
     const m = makeMetrics({ bufferAhead: 0, paused: true });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(advisories.some((a: any) => a.code === 'BUFFER_CRITICAL')).toBe(false);
   });
 
@@ -74,7 +74,7 @@ describe('evaluateAdvisories – rule firing', () => {
       stallCount:         1,
       lastStallTimestamp: NOW - 15_000,
     });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(advisories.some((a: any) => a.code === 'STALL_RECENT')).toBe(true);
   });
 
@@ -83,25 +83,25 @@ describe('evaluateAdvisories – rule firing', () => {
       stallCount:         1,
       lastStallTimestamp: NOW - 60_000,
     });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(advisories.some((a: any) => a.code === 'STALL_RECENT')).toBe(false);
   });
 
   it('fires DROP_RATE_HIGH when drop rate >= 5%', () => {
     const m = makeMetrics({ droppedFrames: 600, totalFrames: 10_000 });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(advisories.some((a: any) => a.code === 'DROP_RATE_HIGH')).toBe(true);
   });
 
   it('fires BUFFER_LOW in the 2–8s range', () => {
     const m = makeMetrics({ bufferAhead: 5 });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(advisories.some((a: any) => a.code === 'BUFFER_LOW')).toBe(true);
   });
 
   it('fires BANDWIDTH_DEFICIT when bitrate > bandwidth by > 500 kbps', () => {
     const m = makeMetrics({ bitrate: 5000, bandwidth: 3000 });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(advisories.some((a: any) => a.code === 'BANDWIDTH_DEFICIT')).toBe(true);
   });
 
@@ -109,20 +109,20 @@ describe('evaluateAdvisories – rule firing', () => {
     const m = makeMetrics({ bufferAhead: 30, droppedFrames: 0, stallCount: 0, decodeTime: 10 });
     const score = scoreFor(m);
     if (score.overall >= 85) {
-      const advisories = evaluateAdvisories(m, score, 'balanced', NOW);
+      const advisories = evaluateAdvisories(m, score, 'balanced', 'en', 'simple', NOW);
       expect(advisories.some((a: any) => a.code === 'SCORE_GOOD')).toBe(true);
     }
   });
 
   it('fires LIVE_BUFFER_LARGE for live mode with buffer > 20s', () => {
     const m = makeMetrics({ bufferAhead: 25 });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'live', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'live', 'en', 'simple', NOW);
     expect(advisories.some((a: any) => a.code === 'LIVE_BUFFER_LARGE')).toBe(true);
   });
 
   it('fires HIGH_PLAYBACK_RATE for rate > 1.5', () => {
     const m = makeMetrics({ playbackRate: 2 });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(advisories.some((a: any) => a.code === 'HIGH_PLAYBACK_RATE')).toBe(true);
   });
 });
@@ -144,13 +144,13 @@ describe('evaluateAdvisories – result limits', () => {
       bitrate:            6000,
       bandwidth:          2000,
     });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(advisories.length).toBeLessThanOrEqual(5);
   });
 
   it('returns an array (possibly empty) for perfect metrics', () => {
     const m = makeMetrics({ bufferAhead: 30, droppedFrames: 0, stallCount: 0, decodeTime: 10, readyState: 4 });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     expect(Array.isArray(advisories)).toBe(true);
   });
 });
@@ -166,7 +166,7 @@ describe('highestSeverity', () => {
 
   it('returns "critical" when a critical advisory is present', () => {
     const m = makeMetrics({ bufferAhead: 0 });
-    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', NOW);
+    const advisories = evaluateAdvisories(m, scoreFor(m), 'balanced', 'en', 'simple', NOW);
     if (advisories.some((a: any) => a.severity === 'critical')) {
       expect(highestSeverity(advisories)).toBe('critical');
     }

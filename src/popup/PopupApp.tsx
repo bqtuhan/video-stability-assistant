@@ -38,7 +38,6 @@ import {
 } from '../components';
 import {
   formatBitrate,
-  formatRelativeTime,
   levelToColor,
   round,
 } from '../utils';
@@ -84,7 +83,7 @@ function useExtensionState(): UseExtensionStateResult {
 
       setError(null);
     } catch {
-      setError('Unable to reach the extension background. Try reopening the popup.');
+      setError(chrome.i18n.getMessage('errorReachBackground') || 'Unable to reach the extension background.');
     } finally {
       setLoading(false);
     }
@@ -126,7 +125,7 @@ const NoVideoState: React.FC = () => (
         color: 'var(--vsa-text-primary, #111827)',
       }}
     >
-      No video detected
+      {chrome.i18n.getMessage('noVideoDetected') || 'No video detected'}
     </p>
     <p
       style={{
@@ -137,7 +136,7 @@ const NoVideoState: React.FC = () => (
         lineHeight: 1.5,
       }}
     >
-      Navigate to a page with a playing video to begin monitoring stability.
+      {chrome.i18n.getMessage('noVideoDescription') || 'Navigate to a page with a playing video to begin monitoring stability.'}
     </p>
   </div>
 );
@@ -175,7 +174,7 @@ const ErrorState: React.FC<{ message: string; onRetry: () => void }> = ({
         cursor: 'pointer',
       }}
     >
-      Retry
+      {chrome.i18n.getMessage('btnRetry') || 'Retry'}
     </button>
   </div>
 );
@@ -224,6 +223,9 @@ const PopupApp: React.FC = () => {
   const { metrics, score, advisories, prediction } = tabState ?? {};
   const hasVideo = !!metrics && !!score;
 
+  // Helper for translations
+  const t = (key: string) => chrome.i18n.getMessage(key) || key;
+
   return (
     <div
       style={{
@@ -261,14 +263,14 @@ const PopupApp: React.FC = () => {
               color: 'var(--vsa-text-primary)',
             }}
           >
-            Video Stability Assistant
+            {t('extensionName')}
           </span>
         </div>
 
         <div style={{ display: 'flex', gap: 6 }}>
           <button
             onClick={() => { void refresh(); }}
-            title="Refresh"
+            title={t('btnRefresh')}
             style={iconBtnStyle}
             aria-label="Refresh metrics"
           >
@@ -276,7 +278,7 @@ const PopupApp: React.FC = () => {
           </button>
           <button
             onClick={openOptions}
-            title="Settings"
+            title={t('btnSettings')}
             style={iconBtnStyle}
             aria-label="Open settings"
           >
@@ -322,13 +324,13 @@ const PopupApp: React.FC = () => {
                     color: 'var(--vsa-text-muted)',
                   }}
                 >
-                  Mode: {settings.playbackMode}
+                  {t('labelMode')}: {settings.playbackMode}
                 </span>
 
                 {/* Stall count */}
                 <div>
                   <span style={{ fontSize: 11, color: 'var(--vsa-text-muted)' }}>
-                    Stalls this session:{' '}
+                    {t('labelStalls')}:{' '}
                   </span>
                   <span
                     style={{
@@ -341,63 +343,41 @@ const PopupApp: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Last updated */}
-                <span style={{ fontSize: 10, color: 'var(--vsa-text-muted)' }}>
-                  Updated {formatRelativeTime(tabState!.lastUpdated)}
-                </span>
-
-                {/* Factor toggle */}
                 <button
-                  onClick={() => setShowFactors((p) => !p)}
+                  onClick={() => setShowFactors(!showFactors)}
                   style={{
                     marginTop: 4,
-                    padding: '5px 10px',
+                    padding: '6px 10px',
                     borderRadius: 6,
                     border: '1px solid var(--vsa-card-border)',
                     background: 'var(--vsa-card-bg)',
                     color: 'var(--vsa-text-secondary)',
                     fontSize: 11,
-                    fontWeight: 500,
+                    fontWeight: 600,
                     cursor: 'pointer',
-                    textAlign: 'left',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 4,
                   }}
                 >
-                  {showFactors ? '▲ Hide' : '▼ Show'} Factor Scores
+                  {showFactors ? t('btnHideDetails') : t('btnShowDetails')}
                 </button>
               </div>
             </div>
 
-            {/* ── Factor Breakdown ── */}
             {showFactors && (
-              <section aria-label="Factor score breakdown">
-                <SectionTitle>Score Breakdown</SectionTitle>
-                <FactorBreakdown
-                  factors={score.factors}
-                  /* weights shown in options page */
-                />
-              </section>
+              <FactorBreakdown factors={score.factors} />
             )}
 
-            {/* ── Buffer Bar ── */}
-            <BufferBar
-              bufferAheadS={metrics.bufferAhead}
-              maxS={30}
-              height={10}
-              showLabel
-            />
+            <BufferBar bufferAheadS={metrics.bufferAhead} />
 
             {/* ── Metrics Grid ── */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 8,
-              }}
-            >
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               <MetricCard
-                label="Bitrate"
-                value={metrics.bitrate > 0 ? formatBitrate(metrics.bitrate) : '—'}
-                subLabel="current stream"
+                label={t('labelBitrate')}
+                value={formatBitrate(metrics.bitrate)}
+                subLabel={t('subLabelCurrent')}
                 status={
                   metrics.bitrate > 0 && metrics.bandwidth > 0
                     ? metrics.bitrate > metrics.bandwidth
@@ -407,15 +387,15 @@ const PopupApp: React.FC = () => {
                 }
               />
               <MetricCard
-                label="Bandwidth"
+                label={t('labelBandwidth')}
                 value={
                   metrics.bandwidth > 0 ? formatBitrate(metrics.bandwidth) : '—'
                 }
-                subLabel="available"
+                subLabel={t('subLabelAvailable')}
                 status="neutral"
               />
               <MetricCard
-                label="Drop Rate"
+                label={t('labelDropRate')}
                 value={
                   metrics.totalFrames > 0
                     ? `${round(
@@ -433,13 +413,13 @@ const PopupApp: React.FC = () => {
                 }
               />
               <MetricCard
-                label="Decode Time"
+                label={t('labelDecodeTime')}
                 value={
                   metrics.decodeTime > 0
                     ? `${round(metrics.decodeTime, 1)} ms`
                     : '—'
                 }
-                subLabel="avg per frame"
+                subLabel={t('subLabelAvgPerFrame')}
                 status={
                   metrics.decodeTime > 50
                     ? 'warning'
@@ -453,7 +433,7 @@ const PopupApp: React.FC = () => {
             {/* ── Advanced Metrics ── */}
             {settings.showAdvancedMetrics && (
               <section aria-label="Advanced metrics">
-                <SectionTitle>Advanced</SectionTitle>
+                <SectionTitle>{t('settingsAdvanced')}</SectionTitle>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                   <MetricCard
                     label="Buffer Behind"
@@ -486,7 +466,7 @@ const PopupApp: React.FC = () => {
             {/* ── Freeze Prediction ── */}
             {settings.enablePrediction && prediction && (
               <section aria-label="Freeze prediction">
-                <SectionTitle>Freeze Prediction</SectionTitle>
+                <SectionTitle>{t('labelFreezePrediction')}</SectionTitle>
                 <PredictionBanner prediction={prediction} />
               </section>
             )}
@@ -495,7 +475,7 @@ const PopupApp: React.FC = () => {
             {advisories && advisories.length > 0 && (
               <section aria-label="Advisories">
                 <SectionTitle>
-                  Advisories
+                  {t('labelAdvisories')}
                   <span
                     style={{
                       marginLeft: 6,
@@ -548,7 +528,7 @@ const PopupApp: React.FC = () => {
 };
 
 // ---------------------------------------------------------------------------
-// Internal Helpers
+// Internal Layout Sub-components
 // ---------------------------------------------------------------------------
 
 const iconBtnStyle: React.CSSProperties = {

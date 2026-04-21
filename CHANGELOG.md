@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-04-21
+### Added
+- Full Internationalization (i18n) support with English and Turkish languages.
+- Automatic browser language detection and manual language selection in settings.
+- New "Advisory Mode" setting: choose between "Simple" (user-friendly) and "Technical" (detailed) advice.
+- Localized desktop notifications.
+- Updated UI with localized strings for Popup and Options pages.
+- Enhanced advisory engine with parameter interpolation for translated messages.
+
 ### Added
 - Full CI/CD pipeline via GitHub Actions (quality gate, browser-specific builds, automated GitHub Releases on version tags)
 - Extension icons (16, 32, 48, 128 px) with professional design

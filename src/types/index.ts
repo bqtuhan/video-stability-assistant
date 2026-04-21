@@ -75,6 +75,8 @@ export interface MetricsSnapshot {
 
 export type PlaybackMode = 'balanced' | 'live' | 'vod';
 export type ThemeMode = 'light' | 'dark' | 'auto';
+export type Language = 'en' | 'tr';
+export type AdvisoryMode = 'simple' | 'technical';
 
 export interface ScoringWeights {
   bufferHealth: number;
@@ -94,6 +96,8 @@ export interface ExtensionSettings {
   enabledSites: string[];
   theme: ThemeMode;
   showAdvancedMetrics: boolean;
+  language: Language;
+  advisoryMode: AdvisoryMode;
 }
 
 export const DEFAULT_SETTINGS: ExtensionSettings = {
@@ -106,6 +110,8 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
   enabledSites: [],
   theme: 'auto',
   showAdvancedMetrics: false,
+  language: 'en',
+  advisoryMode: 'simple',
 };
 
 // ---------------------------------------------------------------------------
