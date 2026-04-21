@@ -24,7 +24,7 @@
   "STALL_RECENT": {
     "simple": {
       "title": "Yakın Zamanda Oynatma Donması",
-      "description": "Videonuz yakın zamanda dondu ({seconds} saniye önce). Bu oturumda {count} donma yaşadınız.",
+      "description": "Videonuz yakın zamanda dondu ({secs} saniye önce). Bu oturumda {stallCount} donma yaşadınız.",
       "actions": [
         "Video kalitesini düşürün",
         "İnternet kullanan diğer uygulamaları kapatın",
@@ -34,7 +34,7 @@
     },
     "technical": {
       "title": "Yakın Zamanda Oynatma Durması",
-      "description": "{seconds}s önce durma tespit edildi. Oturum durma sayısı: {count}. Ağ tıkanıklığı veya decode kararsızlığına işaret eder.",
+      "description": "{secs}s önce durma tespit edildi. Oturum durma sayısı: {stallCount}. Ağ tıkanıklığı veya decode kararsızlığına işaret eder.",
       "actions": [
         "Bitrate gereksinimlerini azaltmak için kalite seviyesini düşürün",
         "Bant genişliği tüketen arka plan işlemlerini kapatın",
@@ -46,7 +46,7 @@
   "BANDWIDTH_DEFICIT": {
     "simple": {
       "title": "Yetersiz İnternet Hızı",
-      "description": "Video {required} kbps gerektirir ancak sadece {available} kbps mevcut. {deficit} kbps eksik.",
+      "description": "Video {bitrate} kbps gerektirir ancak sadece {bandwidth} kbps mevcut. {deficit} kbps eksik.",
       "actions": [
         "Daha düşük kalite seçin (1080p yerine 720p gibi)",
         "Tüm indirmeleri veya yüklemeleri durdurun",
@@ -55,7 +55,7 @@
     },
     "technical": {
       "title": "Mevcut Bitrate için Yetersiz Bant Genişliği",
-      "description": "Akış bitrate: ~{required} kbps. Mevcut bant genişliği: ~{available} kbps. Eksiklik: {deficit} kbps. Yüksek rebuffering olasılığı.",
+      "description": "Akış bitrate: ~{bitrate} kbps. Mevcut bant genişliği: ~{bandwidth} kbps. Eksiklik: {deficit} kbps. Yüksek rebuffering olasılığı.",
       "actions": [
         "Daha düşük kalite seviyesi seçin (1080p → 720p → 480p)",
         "Eşzamanlı yüklemeleri/indirmeleri askıya alın",
@@ -66,7 +66,7 @@
   "DROP_RATE_HIGH": {
     "simple": {
       "title": "Yüksek Kare Düşme Oranı",
-      "description": "Cihazınız video karelerinin %{rate}'ini düşürüyor. Bu takılmalara ve hoppalamalara neden olur.",
+      "description": "Cihazınız video karelerinin %{dropRate}'ini düşürüyor. Bu takılmalara ve hoppalamalara neden olur.",
       "actions": [
         "Oyunları veya diğer ağır programları kapatın",
         "Tarayıcı ayarlarında donanım hızlandırmayı kapatın ve yeniden başlatın",
@@ -76,7 +76,7 @@
     },
     "technical": {
       "title": "Yüksek Kare Düşme Oranı",
-      "description": "Kare düşme oranı: %{rate}. GPU decode darboğazı veya sistem kaynak çekişmesine işaret eder. Gözlemlenebilir kare zamanlama titremesi.",
+      "description": "Kare düşme oranı: %{dropRate}. GPU decode darboğazı veya sistem kaynak çekişmesine işaret eder. Gözlemlenebilir kare zamanlama titremesi.",
       "actions": [
         "GPU yoğun işlemleri sonlandırın (3D rendering, oyun)",
         "Donanım hızlandırmayı devre dışı bırakın (tarayıcı ayarları → yeniden başlatma gerekli)",
@@ -126,7 +126,7 @@
   "DECODE_SLOW": {
     "simple": {
       "title": "Yavaş Kare İşleme",
-      "description": "Cihazınız her kareyi işlemek için {time}ms alıyor. Bu çok yavaş ve takılmalara neden oluyor.",
+      "description": "Cihazınız her kareyi işlemek için {decodeTime}ms alıyor. Bu çok yavaş ve takılmalara neden oluyor.",
       "actions": [
         "Tarayıcı ayarlarında donanım hızlandırmayı açın",
         "Video çözünürlüğünü düşürün",
@@ -135,7 +135,7 @@
     },
     "technical": {
       "title": "Decode Performansı Düştü",
-      "description": "Ortalama decode süresi: {time}ms. Düzgün oynatma için gerçek zamanlı bütçeyi aşıyor. Potansiyel kare zamanlama ihlalleri.",
+      "description": "Ortalama decode süresi: {decodeTime}ms. Düzgün oynatma için gerçek zamanlı bütçeyi aşıyor. Potansiyel kare zamanlama ihlalleri.",
       "actions": [
         "Donanım hızlandırmalı decode'u etkinleştirin (tarayıcı ayarları)",
         "Çözünürlük düşürme yoluyla decode karmaşıklığını azaltın",
@@ -146,7 +146,7 @@
   "STALL_RECURRING": {
     "simple": {
       "title": "Tekrarlayan Donmalar",
-      "description": "Bu oturumda toplam {duration}s kayıp süre ile {count} donma yaşadınız. Muhtemelen kalıcı bir sorun var.",
+      "description": "Bu oturumda toplam {stallDuration}s kayıp süre ile {stallCount} donma yaşadınız. Muhtemelen kalıcı bir sorun var.",
       "actions": [
         "fast.com veya speedtest.net'te internet hızınızı test edin",
         "Farklı sunucu denemek için sayfayı yenileyin",
@@ -155,7 +155,7 @@
     },
     "technical": {
       "title": "Tekrarlayan Durma Deseni",
-      "description": "Oturum durma sayısı: {count}. Toplam durma süresi: {duration}s. Kalıcı ağ veya kaynak sunucu sorununa işaret eder.",
+      "description": "Oturum durma sayısı: {stallCount}. Toplam durma süresi: {stallDuration}s. Kalıcı ağ veya kaynak sunucu sorununa işaret eder.",
       "actions": [
         "Bant genişliği tanılaması yapın (fast.com / speedtest.net)",
         "CDN bağlantısını yeniden kurmak için sabit yenileme yapın",
@@ -178,7 +178,7 @@
   "LOW_READYSTATE": {
     "simple": {
       "title": "Oynatıcı Hazır Değil",
-      "description": "Video oynatıcı yükleniyor (durum {state}). Oynatmaya başlamak için henüz yeterli veriye sahip değil.",
+      "description": "Video oynatıcı yükleniyor (durum {readyState}). Oynatmaya başlamak için henüz yeterli veriye sahip değil.",
       "actions": [
         "İlk yüklemenin tamamlanmasını bekleyin",
         "15 saniyeden fazla takılı kalırsa yenilemeyi deneyin"
@@ -186,7 +186,7 @@
     },
     "technical": {
       "title": "Yetersiz ReadyState",
-      "description": "Medya öğesi readyState: {state}. HAVE_FUTURE_DATA'nın (3) altında. İlk tampon dolumunu bekliyor.",
+      "description": "Medya öğesi readyState: {readyState}. HAVE_FUTURE_DATA'nın (3) altında. İlk tampon dolumunu bekliyor.",
       "actions": [
         "İlk tampon dolumunun tamamlanmasına izin verin",
         "Durum >15s boyunca < 3 kalırsa sabit yenileme yapın"
