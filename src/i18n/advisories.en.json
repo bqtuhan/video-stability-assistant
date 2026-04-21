@@ -24,7 +24,7 @@
   "STALL_RECENT": {
     "simple": {
       "title": "Recent Playback Stall",
-      "description": "Your video froze recently ({seconds}s ago). You've had {count} freeze(s) this session.",
+      "description": "Your video froze recently ({secs}s ago). You've had {stallCount} freeze(s) this session.",
       "actions": [
         "Lower the video quality",
         "Close other apps using internet",
@@ -34,7 +34,7 @@
     },
     "technical": {
       "title": "Recent Playback Stall",
-      "description": "Stall detected {seconds}s ago. Session stall count: {count}. Indicates network congestion or decode instability.",
+      "description": "Stall detected {secs}s ago. Session stall count: {stallCount}. Indicates network congestion or decode instability.",
       "actions": [
         "Decrease quality tier to reduce bitrate requirements",
         "Close background processes consuming bandwidth",
@@ -46,7 +46,7 @@
   "BANDWIDTH_DEFICIT": {
     "simple": {
       "title": "Not Enough Internet Speed",
-      "description": "The video needs {required} kbps but you only have {available} kbps. Missing {deficit} kbps.",
+      "description": "The video needs {bitrate} kbps but you only have {bandwidth} kbps. Missing {deficit} kbps.",
       "actions": [
         "Choose a lower quality (like 720p instead of 1080p)",
         "Stop any downloads or uploads",
@@ -55,7 +55,7 @@
     },
     "technical": {
       "title": "Bandwidth Insufficient for Current Bitrate",
-      "description": "Stream bitrate: ~{required} kbps. Available bandwidth: ~{available} kbps. Deficit: {deficit} kbps. High rebuffering probability.",
+      "description": "Stream bitrate: ~{bitrate} kbps. Available bandwidth: ~{bandwidth} kbps. Deficit: {deficit} kbps. High rebuffering probability.",
       "actions": [
         "Select lower quality tier (1080p → 720p → 480p)",
         "Suspend concurrent uploads/downloads",
@@ -66,7 +66,7 @@
   "DROP_RATE_HIGH": {
     "simple": {
       "title": "High Frame Drop Rate",
-      "description": "Your device is dropping {rate}% of video frames. This causes stuttering and choppy video.",
+      "description": "Your device is dropping {dropRate}% of video frames. This causes stuttering and choppy video.",
       "actions": [
         "Close games or other heavy programs",
         "Turn off hardware acceleration in browser settings and restart",
@@ -76,7 +76,7 @@
     },
     "technical": {
       "title": "High Frame Drop Rate",
-      "description": "Frame drop rate: {rate}%. Indicates GPU decode bottleneck or system resource contention. Observable frame timing jitter.",
+      "description": "Frame drop rate: {dropRate}%. Indicates GPU decode bottleneck or system resource contention. Observable frame timing jitter.",
       "actions": [
         "Terminate GPU-intensive processes (3D rendering, gaming)",
         "Disable hardware acceleration (browser settings → restart required)",
@@ -126,7 +126,7 @@
   "DECODE_SLOW": {
     "simple": {
       "title": "Slow Frame Processing",
-      "description": "Your device is taking {time}ms to process each frame. This is too slow and causes stuttering.",
+      "description": "Your device is taking {decodeTime}ms to process each frame. This is too slow and causes stuttering.",
       "actions": [
         "Turn on hardware acceleration in browser settings",
         "Lower the video resolution",
@@ -135,7 +135,7 @@
     },
     "technical": {
       "title": "Decode Performance Degraded",
-      "description": "Average decode time: {time}ms. Exceeds real-time budget for smooth playback. Potential frame timing violations.",
+      "description": "Average decode time: {decodeTime}ms. Exceeds real-time budget for smooth playback. Potential frame timing violations.",
       "actions": [
         "Enable hardware-accelerated decode (browser settings)",
         "Reduce decode complexity via resolution downgrade",
@@ -146,7 +146,7 @@
   "STALL_RECURRING": {
     "simple": {
       "title": "Multiple Freezes",
-      "description": "You've had {count} freezes this session, totaling {duration}s of lost time. There's likely a persistent issue.",
+      "description": "You've had {stallCount} freezes this session, totaling {stallDuration}s of lost time. There's likely a persistent issue.",
       "actions": [
         "Test your internet speed at fast.com or speedtest.net",
         "Refresh the page to try a different server",
@@ -155,7 +155,7 @@
     },
     "technical": {
       "title": "Recurring Stall Pattern",
-      "description": "Session stall count: {count}. Total stall duration: {duration}s. Indicates persistent network or origin server issue.",
+      "description": "Session stall count: {stallCount}. Total stall duration: {stallDuration}s. Indicates persistent network or origin server issue.",
       "actions": [
         "Perform bandwidth diagnostic (fast.com / speedtest.net)",
         "Hard refresh to re-establish CDN connection",
@@ -178,7 +178,7 @@
   "LOW_READYSTATE": {
     "simple": {
       "title": "Player Not Ready",
-      "description": "The video player is loading (state {state}). It doesn't have enough data to start playing yet.",
+      "description": "The video player is loading (state {readyState}). It doesn't have enough data to start playing yet.",
       "actions": [
         "Wait for the initial loading to complete",
         "If it's stuck for more than 15 seconds, try refreshing"
@@ -186,7 +186,7 @@
     },
     "technical": {
       "title": "Insufficient ReadyState",
-      "description": "Media element readyState: {state}. Below HAVE_FUTURE_DATA (3). Waiting for initial buffer fill.",
+      "description": "Media element readyState: {readyState}. Below HAVE_FUTURE_DATA (3). Waiting for initial buffer fill.",
       "actions": [
         "Allow initial buffer fill to complete",
         "Hard refresh if state remains < 3 for >15s"
