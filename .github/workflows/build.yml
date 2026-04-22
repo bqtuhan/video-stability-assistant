@@ -32,14 +32,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: TypeScript Type Check
-        run: npm run type-check
-
-      - name: ESLint
-        run: npm run lint
-
-      - name: Unit Tests with Coverage
-        run: npm run test:coverage
+      - name: CI Quality Check (Lint + Type Check + Tests)
+        run: npm run test:ci
 
       - name: Upload Coverage Report
         if: always()
