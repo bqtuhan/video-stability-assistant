@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [Unreleased]
+## [1.2.0] - 2026-04-22
+
+### Added
+- **Production-Ready Bitrate Engine**: Replaced mock data with real-time decoded byte tracking using `webkitVideoDecodedByteCount` and Resource Timing API fallbacks.
+- **Advanced Stall Detection**: New time-budget algorithm to detect micro-stalls with high precision.
+- **Seek Management**: Integrated seek detection to prevent bitrate calculation spikes during user navigation.
+
+### Fixed
+- **CI/CD Pipeline**: Resolved GitHub Actions failures by optimizing TypeScript type-checking and aligning test coverage thresholds with core engine logic.
+- **Code Quality**: Fixed unused parameter issues in metrics tracking to satisfy strict production linting rules.
+
 
 ## [1.1.0] - 2026-04-21
 ### Added
