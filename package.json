@@ -2,7 +2,7 @@
   "name": "video-stability-assistant",
   "version": "1.2.0",
   "description": "Real-time browser extension for video playback stability monitoring, scoring, freeze prediction, and actionable advisories.",
-  "author": "bqtuhan",
+  "author": "bqtuhan <batuhqnn1@gmail.com>",
   "license": "Apache-2.0",
   "homepage": "https://github.com/bqtuhan/video-stability-assistant",
   "repository": {
@@ -30,11 +30,13 @@
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch --passWithNoTests",
     "test:coverage": "jest --coverage --passWithNoTests",
-    "clean": "rimraf dist",
+    "test:ci": "npm run lint && npm run type-check && npm run test:coverage",
+    "clean": "rimraf dist releases",
     "prebuild": "npm run clean",
     "validate-weights": "node -e \"const s=require('./src/engines/scoring'); ['balanced','live','vod'].forEach(m=>{const w=s.getWeights(m);const sum=Object.values(w).reduce((a,b)=>a+b,0);console.log(m,sum.toFixed(3),sum===1?'✅':'❌');});\"",
     "zip": "node scripts/zip.js",
-    "zip:firefox": "node scripts/zip.js --browser firefox"
+    "zip:firefox": "node scripts/zip.js --browser firefox",
+    "release": "npm run build:all && npm run zip && npm run zip:firefox"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -94,10 +96,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 10,
-        "functions": 20,
-        "lines": 20,
-        "statements": 20
+        "branches": 60,
+        "functions": 70,
+        "lines": 75,
+        "statements": 75
       }
     }
   },
