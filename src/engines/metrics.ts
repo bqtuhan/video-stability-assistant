@@ -574,7 +574,7 @@ export class VideoMetricsTracker {
 
     // If no bytes were transferred, try fallback estimation methods
     if (totalBytesDelta <= 0) {
-      this.estimateBitrateFromBufferGrowth(nowMs, timeDeltaMs);
+      this.estimateBitrateFromBufferGrowth(nowMs);
       return;
     }
 
@@ -622,7 +622,7 @@ export class VideoMetricsTracker {
    *  - If buffer is stable, maintain last known bitrate
    *  - If buffer is draining, use conservative estimate
    */
-  private estimateBitrateFromBufferGrowth(nowMs: number, timeDeltaMs: number): void {
+  private estimateBitrateFromBufferGrowth(nowMs: number): void {
     if (this.history.length < 3) {
       // Insufficient history; use network information API as last resort
       this.estimatedBitrate = this.estimateBandwidth();
