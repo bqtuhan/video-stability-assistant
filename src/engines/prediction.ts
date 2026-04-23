@@ -10,7 +10,7 @@ import type {
 } from '../types';
 import { clamp, mean } from '../utils';
 
-const FREEZE_PROBABILITY_THRESHOLD = 0.55;
+const FREEZE_PROBABILITY_THRESHOLD = 0.35; // Lowered for higher sensitivity
 const BUFFER_EXHAUSTION_CRITICAL_S = 3;
 const DROP_GRADIENT_CRITICAL = 2.0;
 const STALL_RECENCY_WINDOW_S = 45;

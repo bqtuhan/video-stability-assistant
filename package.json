@@ -1,6 +1,6 @@
 {
   "name": "video-stability-assistant",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Real-time browser extension for video playback stability monitoring, scoring, freeze prediction, and actionable advisories.",
   "author": "bqtuhan <batuhqnn1@gmail.com>",
   "license": "Apache-2.0",

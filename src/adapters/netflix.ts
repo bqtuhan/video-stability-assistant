@@ -26,9 +26,11 @@ export class NetflixAdapter implements PlatformAdapter {
         const mediaSource = (video as any).srcObject as MediaSource | null;
         if (mediaSource && mediaSource.sourceBuffers) {
           for (let i = 0; i < mediaSource.sourceBuffers.length; i++) {
-            const type = mediaSource.sourceBuffers[i].type;
-            const codecMatch = type.match(/codecs="([^"]+)"/);
-            if (codecMatch) { extras.codec = codecMatch[1]; break; }
+            const sb = mediaSource.sourceBuffers[i] as any;
+            if (sb.type) {
+              const codecMatch = sb.type.match(/codecs="([^"]+)"/);
+              if (codecMatch) { extras.codec = codecMatch[1]; break; }
+            }
           }
         }
       }

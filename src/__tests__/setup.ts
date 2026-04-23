@@ -1,23 +1,21 @@
-/**
- * Video Stability Assistant – Jest Test Setup
- *
- * Provides browser API stubs required to run extension code in the
- * jsdom test environment.
- *
- * @repository  github.com/bqtuhan/video-stability-assistant
- * @license     Apache-2.0
- */
-
 import { jest } from '@jest/globals';
 
 // ---------------------------------------------------------------------------
 // Chrome Extension API Stubs
 // ---------------------------------------------------------------------------
 
-const mockStorage: Record<string, unknown> = {};
+const mockStorage: Record<string, any> = {};
 
 const createStorageArea = () => ({
-  get: jest.fn(async (key: string) => ({ [key]: mockStorage[key] })),
+  get: jest.fn(async (key: any) => {
+    if (typeof key === 'string') return { [key]: mockStorage[key] };
+    if (Array.isArray(key)) {
+      const res: any = {};
+      key.forEach(k => res[k] = mockStorage[k]);
+      return res;
+    }
+    return { ...key, ...mockStorage };
+  }),
   set: jest.fn(async (items: Record<string, unknown>) => {
     Object.assign(mockStorage, items);
   }),
@@ -29,7 +27,7 @@ const createStorageArea = () => ({
   }),
 });
 
-(global as Record<string, unknown>).chrome = {
+(global as any).chrome = {
   runtime: {
     id: 'test-extension-id',
     sendMessage: jest.fn(async () => ({})),
@@ -39,7 +37,7 @@ const createStorageArea = () => ({
     },
     onInstalled: { addListener: jest.fn() },
     onConnect:   { addListener: jest.fn() },
-    getManifest: jest.fn(() => ({ version: '1.0.0' })),
+    getManifest: jest.fn(() => ({ version: '2.0.0' })),
     getURL:      jest.fn((path: string) => `chrome-extension://test-id/${path}`),
     openOptionsPage: jest.fn(),
   },
@@ -66,13 +64,20 @@ const createStorageArea = () => ({
   notifications: {
     create: jest.fn(async () => 'notif-id'),
   },
+
+  i18n: {
+    getMessage: jest.fn((key: string) => key),
+  },
+
+  dom: {
+    openOrClosedShadowRoot: jest.fn((el: any) => el.shadowRoot),
+  }
 };
 
 // ---------------------------------------------------------------------------
 // DOM Stubs
 // ---------------------------------------------------------------------------
 
-// HTMLVideoElement.getVideoPlaybackQuality is not implemented in jsdom.
 Object.defineProperty(HTMLVideoElement.prototype, 'getVideoPlaybackQuality', {
   value: jest.fn(() => ({
     totalVideoFrames:   1000,
@@ -84,7 +89,6 @@ Object.defineProperty(HTMLVideoElement.prototype, 'getVideoPlaybackQuality', {
   writable: true,
 });
 
-// TimeRanges stub for video.buffered
 class MockTimeRanges {
   private readonly _ranges: [number, number][];
   constructor(ranges: [number, number][] = []) {
@@ -102,7 +106,6 @@ Object.defineProperty(HTMLVideoElement.prototype, 'buffered', {
   configurable: true,
 });
 
-// Prevent navigator.connection type errors.
 Object.defineProperty(navigator, 'connection', {
   value: { downlink: 10 },
   writable: true,
