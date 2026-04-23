@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    /* ── Test-specific overrides ── */
+    "types": [
+      "chrome",
+      "node",
+      "jest"
+    ],
+    /* Tests run in jsdom, not a browser extension context.
+       Relax exactOptionalPropertyTypes for test fixtures. */
+    "exactOptionalPropertyTypes": false
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

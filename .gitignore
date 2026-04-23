@@ -41,3 +41,7 @@ yarn-error.log*
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# Lock files for alternative package managers (project uses npm exclusively)
+pnpm-lock.yaml
+yarn.lock

@@ -12,7 +12,18 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# ---------------------------------------------------------------------------
+# Reusable setup composite (defined inline via defaults)
+# ---------------------------------------------------------------------------
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
+  # ──────────────────────────────────────────────────────────────────────────
+  # Quality Gate: Lint + Type Check + Unit Tests
+  # ──────────────────────────────────────────────────────────────────────────
   quality:
     name: Quality Gate
     runs-on: ubuntu-latest
@@ -29,8 +40,14 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: CI Quality Check (Lint + Type Check + Tests)
-        run: npm run test:ci
+      - name: Lint
+        run: npm run lint
+
+      - name: Type Check
+        run: npm run type-check
+
+      - name: Unit Tests with Coverage
+        run: npm run test:coverage
 
       - name: Upload Coverage Report
         if: always()
@@ -40,6 +57,9 @@ jobs:
           path: coverage/
           retention-days: 14
 
+  # ──────────────────────────────────────────────────────────────────────────
+  # Build: Chrome (Manifest V3)
+  # ──────────────────────────────────────────────────────────────────────────
   build-chrome:
     name: Build Chrome (MV3)
     runs-on: ubuntu-latest
@@ -69,7 +89,7 @@ jobs:
         id: version
         run: |
           VERSION=$(node -p "require('./dist/manifest.json').version")
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "Building version: ${VERSION}"
 
       - name: Package Chrome Extension
@@ -84,10 +104,15 @@ jobs:
           path: releases/video-stability-assistant-${{ steps.version.outputs.version }}-chrome.zip
           retention-days: 30
 
+  # ──────────────────────────────────────────────────────────────────────────
+  # Build: Firefox (Manifest V3)
+  # ──────────────────────────────────────────────────────────────────────────
   build-firefox:
     name: Build Firefox (MV3)
     runs-on: ubuntu-latest
     needs: quality
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -111,7 +136,8 @@ jobs:
         id: version
         run: |
           VERSION=$(node -p "require('./dist/manifest.json').version")
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Building version: ${VERSION}"
 
       - name: Package Firefox Extension
         run: npm run zip:firefox
@@ -125,6 +151,9 @@ jobs:
           path: releases/video-stability-assistant-${{ steps.version.outputs.version }}-firefox.zip
           retention-days: 30
 
+  # ──────────────────────────────────────────────────────────────────────────
+  # Release: Create GitHub Release on version tags
+  # ──────────────────────────────────────────────────────────────────────────
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
@@ -162,16 +191,17 @@ jobs:
         run: |
           VERSION=$(node -p "require('./manifest.json').version")
           TAG="${GITHUB_REF#refs/tags/}"
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          echo "tag=${TAG}" >> $GITHUB_OUTPUT
-          echo "chrome_zip=releases/video-stability-assistant-${VERSION}-chrome.zip" >> $GITHUB_OUTPUT
-          echo "firefox_zip=releases/video-stability-assistant-${VERSION}-firefox.zip" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "chrome_zip=releases/video-stability-assistant-${VERSION}-chrome.zip" >> "$GITHUB_OUTPUT"
+          echo "firefox_zip=releases/video-stability-assistant-${VERSION}-firefox.zip" >> "$GITHUB_OUTPUT"
 
       - name: Generate Release Notes
         id: notes
         run: |
-          cat << 'EOF' > release_notes.md
-          ## Video Stability Assistant ${{ steps.meta.outputs.tag }}
+          TAG="${GITHUB_REF#refs/tags/}"
+          cat > release_notes.md << EOF
+          ## Video Stability Assistant ${TAG}
 
           Real-time browser extension for video playback stability monitoring, freeze prediction, and actionable advisories.
 
@@ -179,24 +209,24 @@ jobs:
 
           | Platform | File | Notes |
           |---|---|---|
-          | Chrome / Edge / Brave / Kiwi | `*-chrome.zip` | Manifest V3 |
-          | Firefox / Firefox Android | `*-firefox.zip` | Manifest V3 (Firefox 109+) |
+          | Chrome / Edge / Brave / Kiwi | \`*-chrome.zip\` | Manifest V3 |
+          | Firefox / Firefox Android | \`*-firefox.zip\` | Manifest V3 (Firefox 109+) |
 
           ### Installation
 
           **Chrome / Edge / Brave:**
-          1. Download `*-chrome.zip` and extract it
-          2. Open `chrome://extensions` (or `edge://extensions`)
+          1. Download \`*-chrome.zip\` and extract it
+          2. Open \`chrome://extensions\` (or \`edge://extensions\`)
           3. Enable **Developer Mode**
           4. Click **Load unpacked** and select the extracted folder
 
           **Firefox:**
-          1. Download `*-firefox.zip`
-          2. Open `about:debugging` → **This Firefox**
+          1. Download \`*-firefox.zip\`
+          2. Open \`about:debugging\` → **This Firefox**
           3. Click **Load Temporary Add-on** and select the zip file
 
           **Android (Kiwi Browser):**
-          1. Download `*-chrome.zip` and extract it to your device
+          1. Download \`*-chrome.zip\` and extract it to your device
           2. Open Kiwi → Menu → Extensions → Enable Developer Mode
           3. Load the extracted folder
 

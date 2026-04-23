@@ -263,6 +263,16 @@ module.exports = {
           from: path.resolve(ROOT, '_locales'),
           to:   path.resolve(DIST, '_locales'),
         },
+
+        // HUD overlay (fetched at runtime via chrome.runtime.getURL)
+        {
+          from: path.resolve(ROOT, 'hud.html'),
+          to:   path.resolve(DIST, 'hud.html'),
+        },
+        {
+          from: path.resolve(ROOT, 'hud.css'),
+          to:   path.resolve(DIST, 'hud.css'),
+        },
       ],
     }),
   ],
