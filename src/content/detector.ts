@@ -1,218 +1,103 @@
 /**
- * Video Stability Assistant – Content Script Entry Point (detector.ts)
- *
- * This module is injected by the browser into every matching page.
- * It bootstraps the VideoObserver, reads the user's settings from the
- * service worker, and manages the observer lifecycle in response to
- * page-visibility changes and single-page-application navigations.
- *
- * @repository  github.com/bqtuhan/video-stability-assistant
- * @license     Apache-2.0
+ * Video Stability Assistant – Content Script Entry Point v2.0
+ * @license Apache-2.0
  */
-
 import { VideoObserver } from './observer';
-import { hostnameFromUrl, debounce } from '../utils';
-import { 
-  DEFAULT_SETTINGS, 
-  type ExtensionMessage, 
-  type ExtensionSettings 
-} from '../types';
-
-// ---------------------------------------------------------------------------
-// Module-Level State
-// ---------------------------------------------------------------------------
+import { hostnameFromUrl } from '../utils';
+import { DEFAULT_SETTINGS, type ExtensionMessage, type ExtensionSettings } from '../types';
 
 let observer: VideoObserver | null = null;
 let currentSettings: ExtensionSettings = { ...DEFAULT_SETTINGS };
 let initialized = false;
+let hudElement: HTMLElement | null = null;
 
-// ---------------------------------------------------------------------------
-// Initialisation
-// ---------------------------------------------------------------------------
-
-/**
- * Bootstraps the extension on the current page.
- * Fetches settings from the background, checks site allowlist,
- * and attaches the VideoObserver if the page is permitted.
- */
 async function initialise(): Promise<void> {
-  if (initialized) {
-    return;
-  }
+  if (initialized) return;
   initialized = true;
 
   try {
-    const response = await chrome.runtime.sendMessage({
-      type: 'GET_SETTINGS',
-    } as ExtensionMessage);
-
-    if (response && (response as { type: string }).type === 'SETTINGS_RESPONSE') {
-      currentSettings = (response as { type: string; payload: ExtensionSettings }).payload;
+    const response = await chrome.runtime.sendMessage({ type: 'GET_SETTINGS' } as ExtensionMessage);
+    if (response && (response as any).type === 'SETTINGS_RESPONSE') {
+      currentSettings = (response as any).payload;
     }
-  } catch {
-    // Service worker may be starting up; proceed with defaults.
-  }
+  } catch { /* ignore */ }
 
-  if (!isSiteEnabled(currentSettings)) {
-    return; // Site not in the allowlist; do not inject observer.
-  }
+  if (!isSiteEnabled(currentSettings)) return;
 
   attachObserver();
+  if (currentSettings.enableHud) attachHud();
+  
   listenForSettingsChanges();
   listenForVisibilityChanges();
-  listenForNavigationChanges();
 }
 
-// ---------------------------------------------------------------------------
-// Observer Management
-// ---------------------------------------------------------------------------
-
 function attachObserver(): void {
-  if (observer !== null) {
-    return;
-  }
-
+  if (observer) return;
   observer = new VideoObserver({
     samplingIntervalMs: currentSettings.samplingIntervalMs,
-    messageThrottleMs: Math.max(currentSettings.samplingIntervalMs - 100, 300),
-    onStall: (duration, timestamp) => {
-      if (currentSettings.enableNotifications) {
-        chrome.runtime.sendMessage({
-          type: 'STALL_DETECTED',
-          payload: { duration, timestamp },
-        } as ExtensionMessage).catch(() => {});
-      }
-    },
+    onMetrics: (m) => updateHud(m)
   });
-
   observer.attach();
 }
 
-function detachObserver(): void {
-  observer?.detach();
-  observer = null;
-  initialized = false;
+function attachHud(): void {
+  if (hudElement || !currentSettings.enableHud) return;
+
+  fetch(chrome.runtime.getURL('hud.html'))
+    .then(r => r.text())
+    .then(html => {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = html;
+      hudElement = wrapper.firstElementChild as HTMLElement;
+      document.body.appendChild(hudElement);
+
+      const closeBtn = hudElement.querySelector('#vsa-hud-close');
+      closeBtn?.addEventListener('click', () => {
+        hudElement?.classList.add('vsa-hud-hidden');
+      });
+    });
 }
 
-function restartObserver(): void {
-  detachObserver();
-  initialized = false;
-  void initialise();
-}
+function updateHud(metrics: any): void {
+  if (!hudElement || hudElement.classList.contains('vsa-hud-hidden')) return;
 
-// ---------------------------------------------------------------------------
-// Settings Listener
-// ---------------------------------------------------------------------------
+  // This would ideally receive the full TabState from background, 
+  // but for now we'll update basic metrics.
+  const bufferEl = hudElement.querySelector('#vsa-hud-buffer');
+  if (bufferEl) bufferEl.textContent = `${metrics.bufferAhead.toFixed(1)}s`;
+
+  const bitrateEl = hudElement.querySelector('#vsa-hud-bitrate');
+  if (bitrateEl) bitrateEl.textContent = metrics.bitrate >= 1000 
+    ? `${(metrics.bitrate / 1000).toFixed(1)} Mbps` 
+    : `${Math.round(metrics.bitrate)} kbps`;
+
+  const resEl = hudElement.querySelector('#vsa-hud-resolution');
+  if (resEl) resEl.textContent = metrics.resolution || '--';
+}
 
 function listenForSettingsChanges(): void {
-  chrome.runtime.onMessage.addListener(
-    (message: ExtensionMessage, _sender, sendResponse) => {
-      if (message.type === 'SETTINGS_UPDATED') {
-        const newSettings = message.payload as ExtensionSettings;
-        const intervalChanged =
-          newSettings.samplingIntervalMs !== currentSettings.samplingIntervalMs;
-        const siteAllowlistChanged =
-          JSON.stringify(newSettings.enabledSites) !==
-          JSON.stringify(currentSettings.enabledSites);
-
-        currentSettings = newSettings;
-
-        if (intervalChanged || siteAllowlistChanged) {
-          restartObserver();
-        }
-
-        sendResponse({ ok: true });
-        return true;
-      }
-
-      if (message.type === 'PING') {
-        sendResponse({ type: 'PONG' });
-        return true;
-      }
-
-      return false;
-    },
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Page-Visibility Changes
-// ---------------------------------------------------------------------------
-
-function listenForVisibilityChanges(): void {
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
-      // Suspend sampling while the tab is in the background to conserve resources.
-      observer?.detach();
-    } else {
-      // Resume when the tab becomes active again.
-      attachObserver();
+  chrome.runtime.onMessage.addListener((message: ExtensionMessage) => {
+    if (message.type === 'SETTINGS_UPDATED') {
+      currentSettings = message.payload as ExtensionSettings;
+      if (currentSettings.enableHud) attachHud();
+      else hudElement?.remove();
     }
   });
 }
 
-// ---------------------------------------------------------------------------
-// SPA Navigation Detection
-// ---------------------------------------------------------------------------
-
-/**
- * Detects single-page-application navigations by observing changes to
- * `window.location.href` via a debounced interval check.
- *
- * This approach is used instead of patching `history.pushState` to avoid
- * conflicts with frameworks that wrap the History API.
- */
-function listenForNavigationChanges(): void {
-  let lastHref = window.location.href;
-
-  const checkNavigation = debounce(() => {
-    const currentHref = window.location.href;
-    if (currentHref !== lastHref) {
-      lastHref = currentHref;
-      restartObserver();
-    }
-  }, 300);
-
-  // Poll via MutationObserver on the title element (changes on SPA nav).
-  const titleObserver = new MutationObserver(
-    checkNavigation,
-  );
-
-  const titleEl = document.querySelector('title');
-  if (titleEl) {
-    titleObserver.observe(titleEl, { childList: true });
-  }
-
-  // Also observe the document body's immediate children for SPA root changes.
-  const bodyObserver = new MutationObserver(
-    checkNavigation,
-  );
-
-  if (document.body) {
-    bodyObserver.observe(document.body, { childList: true });
-  }
+function listenForVisibilityChanges(): void {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') observer?.detach();
+    else observer?.attach();
+  });
 }
-
-// ---------------------------------------------------------------------------
-// Site Allowlist Check
-// ---------------------------------------------------------------------------
 
 function isSiteEnabled(settings: ExtensionSettings): boolean {
-  if (settings.enabledSites.length === 0) {
-    return true; // All sites enabled.
-  }
+  if (settings.enabledSites.length === 0) return true;
   const hostname = hostnameFromUrl(window.location.href);
-  return settings.enabledSites.some(
-    (site) => hostname === site || hostname.endsWith(`.${site}`),
-  );
+  return settings.enabledSites.some(s => hostname === s || hostname.endsWith(`.${s}`));
 }
 
-// ---------------------------------------------------------------------------
-// Bootstrap
-// ---------------------------------------------------------------------------
-
-// Delay initialisation until the DOM is ready to ensure `document.body`
-// is available for the SPA navigation observer.
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => void initialise());
 } else {
