@@ -13,9 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ─────────────────────────────────────────────────────────────────────────────
-  # JOB 1 — Quality Gate (lint + type-check + unit tests)
-  # ─────────────────────────────────────────────────────────────────────────────
   quality:
     name: Quality Gate
     runs-on: ubuntu-latest
@@ -43,9 +40,6 @@ jobs:
           path: coverage/
           retention-days: 14
 
-  # ─────────────────────────────────────────────────────────────────────────────
-  # JOB 2 — Build Chrome Extension (MV3)
-  # ─────────────────────────────────────────────────────────────────────────────
   build-chrome:
     name: Build Chrome (MV3)
     runs-on: ubuntu-latest
@@ -90,9 +84,6 @@ jobs:
           path: releases/video-stability-assistant-${{ steps.version.outputs.version }}-chrome.zip
           retention-days: 30
 
-  # ─────────────────────────────────────────────────────────────────────────────
-  # JOB 3 — Build Firefox Extension (MV3)
-  # ─────────────────────────────────────────────────────────────────────────────
   build-firefox:
     name: Build Firefox (MV3)
     runs-on: ubuntu-latest
@@ -134,9 +125,6 @@ jobs:
           path: releases/video-stability-assistant-${{ steps.version.outputs.version }}-firefox.zip
           retention-days: 30
 
-  # ─────────────────────────────────────────────────────────────────────────────
-  # JOB 4 — GitHub Release (only on version tags: v*.*.*)
-  # ─────────────────────────────────────────────────────────────────────────────
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest

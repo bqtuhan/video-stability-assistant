@@ -1,5 +1,14 @@
+/**
+ * Video Stability Assistant – YouTube Platform Adapter v2.0
+ * @license Apache-2.0
+ */
 import type { PlatformAdapter, Platform, VideoMetrics } from '../types';
 import { querySelectorAllDeep } from '../utils';
+
+interface YouTubePlayer {
+  getPlaybackQuality?: () => string;
+  getVideoData?: () => { video_id?: string };
+}
 
 export class YouTubeAdapter implements PlatformAdapter {
   readonly name: Platform = 'youtube';
@@ -11,16 +20,17 @@ export class YouTubeAdapter implements PlatformAdapter {
   extractDeepMetrics(): Partial<VideoMetrics> {
     const extras: Partial<VideoMetrics> = {};
     try {
-      const player = (document.querySelector('#movie_player') as any) || 
-                     (document.querySelector('.html5-video-player') as any);
-      
+      const playerEl =
+        document.querySelector('#movie_player') ??
+        document.querySelector('.html5-video-player');
+      const player = playerEl as (HTMLElement & YouTubePlayer) | null;
       if (player) {
         if (typeof player.getPlaybackQuality === 'function') {
           extras.resolution = player.getPlaybackQuality();
         }
         if (typeof player.getVideoData === 'function') {
           const data = player.getVideoData();
-          if (data && data.video_id) extras.cdnProvider = 'youtube.com';
+          if (data?.video_id) { extras.cdnProvider = 'youtube.com'; }
         }
       }
     } catch { /* ignore */ }
@@ -30,23 +40,21 @@ export class YouTubeAdapter implements PlatformAdapter {
   getVideoElement(): HTMLVideoElement | null {
     const videos = querySelectorAllDeep(document, 'video') as HTMLVideoElement[];
     for (const v of videos) {
-      if (v.duration > 0) return v;
+      if (v.duration > 0) { return v; }
     }
-    return videos[0] || null;
+    return videos[0] ?? null;
   }
 
   downgradeQuality(): boolean {
     try {
-      const gearBtn = document.querySelector('.ytp-settings-button') as HTMLElement;
-      if (!gearBtn) return false;
+      const gearBtn = document.querySelector<HTMLElement>('.ytp-settings-button');
+      if (!gearBtn) { return false; }
       gearBtn.click();
-
       setTimeout(() => {
         const qualityItem = Array.from(document.querySelectorAll('.ytp-menuitem')).find(el =>
           (el.textContent ?? '').toLowerCase().includes('quality'),
         ) as HTMLElement | undefined;
-        if (qualityItem) qualityItem.click();
-
+        if (qualityItem) { qualityItem.click(); }
         setTimeout(() => {
           const options = document.querySelectorAll('.ytp-quality-menu .ytp-menuitem');
           if (options.length >= 2) {

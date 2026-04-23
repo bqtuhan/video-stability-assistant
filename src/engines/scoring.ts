@@ -42,21 +42,26 @@ const BITRATE_CV_CRITICAL_PCT = 80;
 const DECODE_TIME_CRITICAL_MS = 100;
 
 function scoreBufferHealth(bufferAheadS: number): number {
-  if (bufferAheadS <= 0) return 0;
-  if (bufferAheadS < BUFFER_CRITICAL_S) return normalise(bufferAheadS, 0, BUFFER_CRITICAL_S, 0, 30);
-  if (bufferAheadS < 10) return normalise(bufferAheadS, BUFFER_CRITICAL_S, 10, 30, 80);
+  if (bufferAheadS <= 0) { return 0; }
+  if (bufferAheadS < BUFFER_CRITICAL_S) { return normalise(bufferAheadS, 0, BUFFER_CRITICAL_S, 0, 30); }
+  if (bufferAheadS < 10) { return normalise(bufferAheadS, BUFFER_CRITICAL_S, 10, 30, 80); }
   return normalise(bufferAheadS, 10, BUFFER_EXCELLENT_S, 80, 100);
 }
 
 function scoreDropRate(droppedFrames: number, totalFrames: number): number {
-  if (totalFrames <= 0) return 100;
+  if (totalFrames <= 0) { return 100; }
   const pct = clamp((droppedFrames / totalFrames) * 100, 0, 100);
-  if (pct === 0) return 100;
+  if (pct === 0) { return 100; }
   return clamp(100 * Math.exp(-0.14 * pct), 0, 100);
 }
 
-function scoreStallFrequency(stallCount: number, totalStallDurationMs: number, lastStallTimestampMs: number, nowMs: number): number {
-  if (stallCount === 0) return 100;
+function scoreStallFrequency(
+  stallCount: number,
+  totalStallDurationMs: number,
+  lastStallTimestampMs: number,
+  nowMs: number,
+): number {
+  if (stallCount === 0) { return 100; }
   const recencyMultiplier = nowMs - lastStallTimestampMs < 60_000 ? 2 : 1;
   const countPenalty = stallCount * STALL_PENALTY_PER_EVENT * recencyMultiplier;
   const durationPenalty = Math.min(totalStallDurationMs / 1000, 30) * 2;
@@ -65,27 +70,37 @@ function scoreStallFrequency(stallCount: number, totalStallDurationMs: number, l
 
 function scoreBitrateStability(bitrateHistory: number[]): number {
   const validSamples = bitrateHistory.filter(b => b > 0);
-  if (validSamples.length < 3) return 85;
-  const mean = validSamples.reduce((s, v) => s + v, 0) / validSamples.length;
-  if (mean === 0) return 100;
-  const sd = Math.sqrt(validSamples.reduce((s, v) => s + (v - mean) ** 2, 0) / validSamples.length);
-  const cv = (sd / mean) * 100;
+  if (validSamples.length < 3) { return 85; }
+  const meanVal = validSamples.reduce((s, v) => s + v, 0) / validSamples.length;
+  if (meanVal === 0) { return 100; }
+  const sd = Math.sqrt(validSamples.reduce((s, v) => s + (v - meanVal) ** 2, 0) / validSamples.length);
+  const cv = (sd / meanVal) * 100;
   return clamp(normalise(cv, 0, BITRATE_CV_CRITICAL_PCT, 100, 0), 0, 100);
 }
 
 function scoreDecodePerformance(decodeTimeMs: number): number {
-  if (decodeTimeMs <= 0) return 100;
+  if (decodeTimeMs <= 0) { return 100; }
   const nominal = 1000 / 60;
-  if (decodeTimeMs <= nominal) return 100;
+  if (decodeTimeMs <= nominal) { return 100; }
   return clamp(normalise(decodeTimeMs, nominal, DECODE_TIME_CRITICAL_MS, 100, 0), 0, 100);
 }
 
-export function computeScore(metrics: VideoMetrics, bitrateHistory: number[], mode: PlaybackMode = 'balanced', nowMs = Date.now()): StabilityScore {
+export function computeScore(
+  metrics: VideoMetrics,
+  bitrateHistory: number[],
+  mode: PlaybackMode = 'balanced',
+  nowMs = Date.now(),
+): StabilityScore {
   const weights = WEIGHT_PRESETS[mode];
   const factors: ScoreFactors = {
     bufferHealth: scoreBufferHealth(metrics.bufferAhead),
     dropRate: scoreDropRate(metrics.droppedFrames, metrics.totalFrames),
-    stallFrequency: scoreStallFrequency(metrics.stallCount, metrics.totalStallDuration, metrics.lastStallTimestamp, nowMs),
+    stallFrequency: scoreStallFrequency(
+      metrics.stallCount,
+      metrics.totalStallDuration,
+      metrics.lastStallTimestamp,
+      nowMs,
+    ),
     bitrateStability: scoreBitrateStability(bitrateHistory),
     decodePerformance: scoreDecodePerformance(metrics.decodeTime),
   };
@@ -96,7 +111,7 @@ export function computeScore(metrics: VideoMetrics, bitrateHistory: number[], mo
     factors.stallFrequency * weights.stallFrequency +
     factors.bitrateStability * weights.bitrateStability +
     factors.decodePerformance * weights.decodePerformance,
-    0, 100
+    0, 100,
   );
 
   return {

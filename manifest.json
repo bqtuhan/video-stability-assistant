@@ -4,7 +4,7 @@
   "name": "__MSG_extensionName__",
   "short_name": "VSA",
   "description": "__MSG_extensionDescription__",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
@@ -56,7 +56,9 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "icons/*.png"
+        "icons/*.png",
+        "hud.html",
+        "hud.css"
       ],
       "matches": [
         "<all_urls>"
