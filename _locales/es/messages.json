@@ -1,0 +1,246 @@
+{
+  "extensionName": {
+    "message": "Asistente de Estabilidad de Video",
+    "description": "El nombre para mostrar de la extensión que aparece en la interfaz de usuario del navegador."
+  },
+  "extensionDescription": {
+    "message": "Monitoreo en tiempo real de la calidad de reproducción de video con puntuación de estabilidad, predicción de congelamiento y avisos prácticos.",
+    "description": "La descripción que se muestra en la página de gestión de extensiones."
+  },
+
+  "popupTitle": {
+    "message": "Asistente de Estabilidad de Video",
+    "description": "Título mostrado en la parte superior de la ventana emergente."
+  },
+  "popupNoVideo": {
+    "message": "No se detectó ningún video",
+    "description": "Mensaje mostrado en la ventana emergente cuando no se encuentra ningún elemento de video en la pestaña activa."
+  },
+  "popupNoVideoHint": {
+    "message": "Navega a una página con un video en reproducción para comenzar a monitorear la estabilidad.",
+    "description": "Texto de sugerencia mostrado debajo del mensaje de 'no hay video'."
+  },
+
+  "scoreLabel": {
+    "message": "Puntuación de estabilidad",
+    "description": "Etiqueta para el indicador de puntuación de estabilidad general."
+  },
+  "levelExcellent": {
+    "message": "Excelente",
+    "description": "Nivel de estabilidad: excelente (puntuación ≥ 85)."
+  },
+  "levelGood": {
+    "message": "Buena",
+    "description": "Nivel de estabilidad: buena (puntuación ≥ 65)."
+  },
+  "levelFair": {
+    "message": "Aceptable",
+    "description": "Nivel de estabilidad: aceptable (puntuación ≥ 45)."
+  },
+  "levelPoor": {
+    "message": "Deficiente",
+    "description": "Nivel de estabilidad: deficiente (puntuación ≥ 25)."
+  },
+  "levelCritical": {
+    "message": "Crítica",
+    "description": "Nivel de estabilidad: crítica (puntuación < 25)."
+  },
+
+  "factorBufferHealth": {
+    "message": "Salud del búfer",
+    "description": "Etiqueta para el factor de puntuación de la salud del búfer."
+  },
+  "factorDropRate": {
+    "message": "Tasa de pérdida de fotogramas",
+    "description": "Etiqueta para el factor de puntuación de la tasa de pérdida de fotogramas."
+  },
+  "factorStallFrequency": {
+    "message": "Frecuencia de interrupciones",
+    "description": "Etiqueta para el factor de puntuación de la frecuencia de interrupciones."
+  },
+  "factorBitrateStability": {
+    "message": "Estabilidad de la tasa de bits",
+    "description": "Etiqueta para el factor de puntuación de la estabilidad de la tasa de bits."
+  },
+  "factorDecodePerformance": {
+    "message": "Rendimiento de decodificación",
+    "description": "Etiqueta para el factor de puntuación del rendimiento de decodificación."
+  },
+
+  "metricBitrate": {
+    "message": "Tasa de bits",
+    "description": "Etiqueta para la tarjeta de métrica de la tasa de bits actual de la transmisión."
+  },
+  "metricBandwidth": {
+    "message": "Ancho de banda",
+    "description": "Etiqueta para la tarjeta de métrica del ancho de banda de red disponible."
+  },
+  "metricDropRate": {
+    "message": "Tasa de pérdida",
+    "description": "Etiqueta para la tarjeta de métrica de la tasa de pérdida de fotogramas."
+  },
+  "metricDecodeTime": {
+    "message": "Tiempo de decodificación",
+    "description": "Etiqueta para la tarjeta de métrica del tiempo promedio de decodificación de fotogramas."
+  },
+  "metricBuffer": {
+    "message": "Búfer",
+    "description": "Etiqueta para la barra del búfer."
+  },
+  "metricStalls": {
+    "message": "Interrupciones en esta sesión",
+    "description": "Etiqueta para la visualización del contador de interrupciones."
+  },
+
+  "predictionTitle": {
+    "message": "Predicción de congelamiento",
+    "description": "Encabezado de sección para el panel de predicción de congelamiento."
+  },
+  "predictionSafe": {
+    "message": "No se prevén congelamientos",
+    "description": "Mensaje de estado cuando no se espera ningún congelamiento."
+  },
+  "predictionWarn": {
+    "message": "Riesgo de congelamiento detectado",
+    "description": "Mensaje de estado cuando se considera probable un congelamiento."
+  },
+  "predictionProbability": {
+    "message": "Probabilidad",
+    "description": "Etiqueta para el valor de probabilidad de congelamiento."
+  },
+  "predictionEstTime": {
+    "message": "Tiempo est.",
+    "description": "Etiqueta para el tiempo estimado hasta el congelamiento."
+  },
+  "predictionConfidence": {
+    "message": "Confianza",
+    "description": "Etiqueta para el nivel de confianza de la predicción."
+  },
+  "predictionConfidenceLow": {
+    "message": "Baja",
+    "description": "Nivel de confianza de predicción bajo."
+  },
+  "predictionConfidenceMedium": {
+    "message": "Media",
+    "description": "Nivel de confianza de predicción medio."
+  },
+  "predictionConfidenceHigh": {
+    "message": "Alta",
+    "description": "Nivel de confianza de predicción alto."
+  },
+
+  "advisoryTitle": {
+    "message": "Avisos",
+    "description": "Encabezado de sección para la lista de avisos."
+  },
+  "advisoryNone": {
+    "message": "No hay avisos en este momento.",
+    "description": "Mensaje mostrado cuando no hay avisos activos."
+  },
+  "advisorySuggestedActions": {
+    "message": "Acciones sugeridas",
+    "description": "Subencabezado para la lista de acciones dentro de una tarjeta de aviso."
+  },
+
+  "notifTitlePrefix": {
+    "message": "Estabilidad de video:",
+    "description": "Prefijo para los títulos de las notificaciones de escritorio."
+  },
+
+  "modeBalanced": {
+    "message": "Equilibrado",
+    "description": "Modo de reproducción: equilibrado."
+  },
+  "modeLive": {
+    "message": "En vivo",
+    "description": "Modo de reproducción: en vivo."
+  },
+  "modeVod": {
+    "message": "VOD",
+    "description": "Modo de reproducción: video bajo demanda."
+  },
+
+  "settingsTitle": {
+    "message": "Configuración",
+    "description": "Título de la página de opciones."
+  },
+  "settingsPlaybackMode": {
+    "message": "Modo de reproducción",
+    "description": "Encabezado de sección de ajustes para la selección del modo de reproducción."
+  },
+  "settingsNotifications": {
+    "message": "Notificaciones",
+    "description": "Encabezado de sección de ajustes para los controles de notificación."
+  },
+  "settingsSampling": {
+    "message": "Recopilación de métricas",
+    "description": "Encabezado de sección de ajustes para los controles del intervalo de muestreo."
+  },
+  "settingsSiteAllowlist": {
+    "message": "Lista de sitios permitidos",
+    "description": "Encabezado de sección de ajustes para la lista de permitidos de sitios."
+  },
+  "settingsAdvanced": {
+    "message": "Avanzado",
+    "description": "Encabezado de sección de ajustes para opciones avanzadas."
+  },
+  "settingsAppearance": {
+    "message": "Apariencia",
+    "description": "Encabezado de sección de ajustes para la selección del tema."
+  },
+  "settingsReset": {
+    "message": "Restablecer valores predeterminados",
+    "description": "Encabezado de sección de ajustes para la acción de restablecimiento."
+  },
+
+  "btnSave": {
+    "message": "Guardar",
+    "description": "Etiqueta del botón de guardar."
+  },
+  "btnReset": {
+    "message": "Restablecer todos los ajustes",
+    "description": "Etiqueta del botón de restablecimiento en la zona de peligro."
+  },
+  "btnConfirmReset": {
+    "message": "Confirmar restablecimiento",
+    "description": "Botón de confirmación para la acción de restablecimiento."
+  },
+  "btnCancel": {
+    "message": "Cancelar",
+    "description": "Etiqueta del botón de cancelar."
+  },
+  "btnRefresh": {
+    "message": "Actualizar",
+    "description": "Información sobre herramientas (tooltip) del botón de actualización."
+  },
+  "btnSettings": {
+    "message": "Configuración",
+    "description": "Información sobre herramientas (tooltip) del botón de configuración."
+  },
+
+  "statusSaving": {
+    "message": "Guardando…",
+    "description": "Texto del banner de estado mientras se guardan los ajustes."
+  },
+  "statusSaved": {
+    "message": "Configuración guardada.",
+    "description": "Texto del banner de estado tras un guardado exitoso."
+  },
+  "statusError": {
+    "message": "Error al guardar. Inténtalo de nuevo.",
+    "description": "Texto del banner de estado cuando falla el guardado."
+  },
+
+  "themeLight": {
+    "message": "Claro",
+    "description": "Etiqueta de la opción de tema claro."
+  },
+  "themeDark": {
+    "message": "Oscuro",
+    "description": "Etiqueta de la opción de tema oscuro."
+  },
+  "themeAuto": {
+    "message": "Sistema",
+    "description": "Etiqueta de la opción de tema automático (preferencia del sistema)."
+  }
+}
