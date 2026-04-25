@@ -1,0 +1,230 @@
+{
+  "BUFFER_CRITICAL": {
+    "simple": {
+      "title": "Búfer críticamente bajo",
+      "description": "Tu video podría detenerse pronto. Menos de 2 segundos de video listos para reproducir.",
+      "actions": [
+        "Pausa el video durante 10-20 segundos para que cargue más",
+        "Reduce la calidad del video si es posible",
+        "Cierra otras aplicaciones o pestañas del navegador que usen internet",
+        "Intenta actualizar la página si nada de lo anterior funciona"
+      ]
+    },
+    "technical": {
+      "title": "Búfer críticamente bajo",
+      "description": "Nivel de búfer < 2s. Rebuffering inminente. Contenido precargado insuficiente para mantener la reproducción continua.",
+      "actions": [
+        "Pausar la reproducción durante 10-20s para reconstruir la profundidad del búfer",
+        "Reducir el nivel de calidad (anulación manual de ABR)",
+        "Finalizar procesos concurrentes con alto consumo de ancho de banda",
+        "Realizar una actualización forzada (Ctrl+Shift+R) para restablecer la conexión con la CDN"
+      ]
+    }
+  },
+  "STALL_RECENT": {
+    "simple": {
+      "title": "Interrupción de reproducción reciente",
+      "description": "Tu video se congeló hace poco ({secs}s). Has tenido {stallCount} interrupción(es) en esta sesión.",
+      "actions": [
+        "Reduce la calidad del video",
+        "Cierra otras aplicaciones que usen internet",
+        "Comprueba si una VPN o un proxy está ralentizando tu conexión",
+        "Intenta usar una conexión por cable en lugar de Wi-Fi"
+      ]
+    },
+    "technical": {
+      "title": "Interrupción de reproducción reciente",
+      "description": "Interrupción detectada hace {secs}s. Contador de interrupciones de sesión: {stallCount}. Indica congestión de red o inestabilidad de decodificación.",
+      "actions": [
+        "Disminuir el nivel de calidad para reducir los requisitos de tasa de bits",
+        "Cerrar procesos en segundo plano que consuman ancho de banda",
+        "Verificar que la VPN/proxy no esté limitando el rendimiento",
+        "Cambiar a Ethernet para eliminar la variabilidad de latencia de Wi-Fi"
+      ]
+    }
+  },
+  "BANDWIDTH_DEFICIT": {
+    "simple": {
+      "title": "Velocidad de internet insuficiente",
+      "description": "El video necesita {bitrate} kbps pero solo tienes {bandwidth} kbps. Faltan {deficit} kbps.",
+      "actions": [
+        "Elige una calidad inferior (como 720p en lugar de 1080p)",
+        "Detén cualquier descarga o carga",
+        "Comprueba si tu proveedor de internet tiene problemas"
+      ]
+    },
+    "technical": {
+      "title": "Ancho de banda insuficiente para la tasa de bits actual",
+      "description": "Tasa de bits del flujo: ~{bitrate} kbps. Ancho de banda disponible: ~{bandwidth} kbps. Déficit: {deficit} kbps. Alta probabilidad de re-buffering.",
+      "actions": [
+        "Seleccionar un nivel de calidad inferior (1080p → 720p → 480p)",
+        "Suspender cargas/descargas simultáneas",
+        "Monitorear el estado de congestión del ISP mediante diagnósticos de red"
+      ]
+    }
+  },
+  "DROP_RATE_HIGH": {
+    "simple": {
+      "title": "Alta tasa de pérdida de fotogramas",
+      "description": "Tu dispositivo está perdiendo el {dropRate}% de los fotogramas de video. Esto causa tartamudeo y video entrecortado.",
+      "actions": [
+        "Cierra juegos u otros programas pesados",
+        "Desactiva la aceleración por hardware en la configuración del navegador y reinicia",
+        "Reduce la resolución del video",
+        "Actualiza tus controladores de gráficos"
+      ]
+    },
+    "technical": {
+      "title": "Alta tasa de pérdida de fotogramas",
+      "description": "Tasa de pérdida de fotogramas: {dropRate}%. Indica cuello de botella en la decodificación de la GPU o conflicto de recursos del sistema. Jitter de sincronización de fotogramas observable.",
+      "actions": [
+        "Finalizar procesos intensivos de GPU (renderizado 3D, juegos)",
+        "Desactivar la aceleración por hardware (configuración del navegador → requiere reinicio)",
+        "Reducir la carga de decodificación mediante la reducción de resolución",
+        "Actualizar los controladores de la GPU a la última versión estable"
+      ]
+    }
+  },
+  "BUFFER_LOW": {
+    "simple": {
+      "title": "Búfer bajo",
+      "description": "Solo hay {buffer}s de video cargados por adelantado. Si tu internet se ralentiza, el video podría detenerse.",
+      "actions": [
+        "Pausa durante unos segundos para que cargue más video",
+        "Considera bajar la calidad un nivel"
+      ]
+    },
+    "technical": {
+      "title": "Nivel de búfer bajo",
+      "description": "Profundidad del búfer: {buffer}s. Por debajo del umbral óptimo (8s+). Vulnerable a la degradación de las condiciones de red.",
+      "actions": [
+        "Pausar temporalmente para aumentar la profundidad del búfer",
+        "Reducir el nivel de calidad un nivel para mejorar la tasa de llenado del búfer"
+      ]
+    }
+  },
+  "BITRATE_UNSTABLE": {
+    "simple": {
+      "title": "Calidad de video inestable",
+      "description": "La calidad del video cambia con frecuencia. Esto suele ser causado por una conexión a internet inestable.",
+      "actions": [
+        "Bloquea el video en una calidad específica si tu reproductor lo permite",
+        "Acércate a tu router Wi-Fi o usa un cable",
+        "Prueba con un servidor diferente si la plataforma lo admite"
+      ]
+    },
+    "technical": {
+      "title": "Inestabilidad de la tasa de bits",
+      "description": "Detectada varianza significativa en la tasa de bits. El algoritmo ABR realiza cambios frecuentes de nivel de calidad. Oscilación de calidad observable.",
+      "actions": [
+        "Desactivar ABR y fijar la calidad en un nivel específico (anulación manual)",
+        "Reducir la pérdida de ruta Wi-Fi (proximidad al punto de acceso) o cambiar a Ethernet",
+        "Seleccionar una región de CDN alternativa si la plataforma admite la selección de nodos (edges)"
+      ]
+    }
+  },
+  "DECODE_SLOW": {
+    "simple": {
+      "title": "Procesamiento de fotogramas lento",
+      "description": "Tu dispositivo tarda {decodeTime}ms en procesar cada fotograma. Esto es demasiado lento y causa tartamudeo.",
+      "actions": [
+        "Activa la aceleración por hardware en la configuración del navegador",
+        "Reduce la resolución del video",
+        "Cierra otras pestañas del navegador y programas"
+      ]
+    },
+    "technical": {
+      "title": "Rendimiento de decodificación degradado",
+      "description": "Tiempo promedio de decodificación: {decodeTime}ms. Excede el presupuesto de tiempo real para una reproducción fluida. Posibles violaciones de sincronización de fotogramas.",
+      "actions": [
+        "Habilitar la decodificación acelerada por hardware (configuración del navegador)",
+        "Reducir la complejidad de decodificación mediante la reducción de resolución",
+        "Finalizar pestañas del navegador concurrentes y procesos en segundo plano"
+      ]
+    }
+  },
+  "STALL_RECURRING": {
+    "simple": {
+      "title": "Múltiples interrupciones",
+      "description": "Has tenido {stallCount} interrupciones en esta sesión, sumando un total de {stallDuration}s de tiempo perdido. Es probable que haya un problema persistente.",
+      "actions": [
+        "Prueba tu velocidad de internet en fast.com o speedtest.net",
+        "Actualiza la página para intentar con un servidor diferente",
+        "Intenta alternar entre datos móviles y Wi-Fi para localizar el problema"
+      ]
+    },
+    "technical": {
+      "title": "Patrón de interrupciones recurrentes",
+      "description": "Contador de interrupciones de sesión: {stallCount}. Duración total de interrupciones: {stallDuration}s. Indica un problema persistente de red o del servidor de origen.",
+      "actions": [
+        "Realizar diagnóstico de ancho de banda (fast.com / speedtest.net)",
+        "Actualización forzada para restablecer la conexión con la CDN",
+        "Cambiar de interfaz de red (celular ↔ Wi-Fi) para aislar el problema"
+      ]
+    }
+  },
+  "SCORE_GOOD": {
+    "simple": {
+      "title": "Reproducción estable",
+      "description": "Todo parece estar bien. Tu video se está reproduciendo sin problemas.",
+      "actions": []
+    },
+    "technical": {
+      "title": "Condiciones de reproducción óptimas",
+      "description": "Todas las métricas de calidad dentro de los umbrales aceptables. No se requiere acción correctiva.",
+      "actions": []
+    }
+  },
+  "LOW_READYSTATE": {
+    "simple": {
+      "title": "Reproductor no listo",
+      "description": "El reproductor de video se está cargando (estado {readyState}). Aún no tiene suficientes datos para comenzar la reproducción.",
+      "actions": [
+        "Espera a que se complete la carga inicial",
+        "Si se queda atascado por más de 15 segundos, intenta actualizar la página"
+      ]
+    },
+    "technical": {
+      "title": "ReadyState insuficiente",
+      "description": "readyState del elemento multimedia: {readyState}. Por debajo de HAVE_FUTURE_DATA (3). Esperando el llenado inicial del búfer.",
+      "actions": [
+        "Permitir que se complete el llenado inicial del búfer",
+        "Actualización forzada si el estado permanece < 3 durante más de 15s"
+      ]
+    }
+  },
+  "HIGH_PLAYBACK_RATE": {
+    "simple": {
+      "title": "Velocidad de reproducción rápida",
+      "description": "Estás reproduciendo a una velocidad de {rate}×. Las puntuaciones de calidad pueden ser más bajas porque el sistema de video no está optimizado para una reproducción rápida.",
+      "actions": [
+        "Ten en cuenta que las puntuaciones de estabilidad durante la reproducción rápida pueden no reflejar el rendimiento normal"
+      ]
+    },
+    "technical": {
+      "title": "Tasa de reproducción no estándar",
+      "description": "Tasa de reproducción: {rate}×. Las estrategias de búfer no están calibradas para reproducción acelerada. Las métricas pueden desviarse del funcionamiento nominal.",
+      "actions": [
+        "Interpretar las puntuaciones de estabilidad a tasas >1.5× con precaución (heurísticas de búfer optimizadas para 1.0×)"
+      ]
+    }
+  },
+  "LIVE_BUFFER_LARGE": {
+    "simple": {
+      "title": "Alto retraso en la transmisión en vivo",
+      "description": "Tienes {buffer}s de búfer en una transmisión en vivo. Estás viendo con un retraso significativo respecto a la emisión real.",
+      "actions": [
+        "Haz clic en el botón 'ir al vivo' si está disponible",
+        "Actualiza la página si no hay un botón de sincronización en vivo"
+      ]
+    },
+    "technical": {
+      "title": "Latencia elevada de transmisión en vivo",
+      "description": "Profundidad del búfer en vivo: {buffer}s. Posición de visualización significativamente por detrás del borde en vivo (live edge). Alta latencia glass-to-glass.",
+      "actions": [
+        "Ejecutar resincronización con el borde en vivo (control 'ir al vivo' en la UI del reproductor)",
+        "Actualización forzada si el control de sincronización en vivo no está disponible"
+      ]
+    }
+  }
+}
