@@ -14,7 +14,8 @@ export class YouTubeAdapter implements PlatformAdapter {
   readonly name: Platform = 'youtube';
 
   detect(): boolean {
-    return window.location.hostname.endsWith('youtube.com');
+    const host = window.location.hostname.toLowerCase();
+    return host === 'youtube.com' || host.endsWith('.youtube.com');
   }
 
   extractDeepMetrics(): Partial<VideoMetrics> {
