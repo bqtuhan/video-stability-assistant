@@ -365,7 +365,10 @@ export function highestSeverity(advisories: Advisory[]): Advisory['severity'] | 
  */
 export function newAdvisoryCodes(previous: Advisory[], current: Advisory[]): string[] {
   const prevCodes = new Set(previous.map((a) => a.code));
-  return current
-    .filter((a) => !prevCodes.has(a.code))
-    .map((a) => a.code);
+  return current.reduce<string[]>((acc, a) => {
+    if (!prevCodes.has(a.code)) {
+      acc.push(a.code);
+    }
+    return acc;
+  }, []);
 }
