@@ -4,7 +4,7 @@
  * a requestIdleCallback polyfill, and throttle/debounce helpers.
  * @license Apache-2.0
  */
-import type { StabilityLevel, LogEntry } from '../types';
+import type { StabilityLevel } from '../types';
 
 //  Numeric Helpers 
 export function clamp(value: number, min: number, max: number): number {
@@ -258,22 +258,4 @@ export function hostnameFromUrl(url: string): string {
   } catch {
     return '';
   }
-}
-
-export function logEntriesToCSV(entries: LogEntry[]): string {
-  const header = 'Timestamp,Score,Level,Bitrate,DroppedFrames,StallCount,BufferAhead\n';
-  const rows = entries.map(e =>
-    `${new Date(e.timestamp).toISOString()},${e.score},${e.level},${e.bitrate},${e.droppedFrames},${e.stallCount},${e.bufferAhead}`,
-  ).join('\n');
-  return header + rows;
-}
-
-export function downloadCSV(csv: string, filename: string): void {
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
 }
