@@ -69,11 +69,27 @@ function scoreStallFrequency(
 }
 
 function scoreBitrateStability(bitrateHistory: number[]): number {
-  const validSamples = bitrateHistory.filter(b => b > 0);
-  if (validSamples.length < 3) { return 85; }
-  const meanVal = validSamples.reduce((s, v) => s + v, 0) / validSamples.length;
+  let count = 0;
+  let sum = 0;
+  let sumSq = 0;
+
+  for (let i = 0; i < bitrateHistory.length; i++) {
+    const b = bitrateHistory[i];
+    if (b > 0) {
+      count++;
+      sum += b;
+      sumSq += b * b;
+    }
+  }
+
+  if (count < 3) { return 85; }
+
+  const meanVal = sum / count;
   if (meanVal === 0) { return 100; }
-  const sd = Math.sqrt(validSamples.reduce((s, v) => s + (v - meanVal) ** 2, 0) / validSamples.length);
+
+  const variance = (sumSq / count) - (meanVal * meanVal);
+  const sd = Math.sqrt(Math.max(0, variance));
+
   const cv = (sd / meanVal) * 100;
   return clamp(normalise(cv, 0, BITRATE_CV_CRITICAL_PCT, 100, 0), 0, 100);
 }
