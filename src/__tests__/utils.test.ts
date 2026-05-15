@@ -29,6 +29,7 @@ import {
   hostnameFromUrl,
   shallowMerge,
   sleep,
+  cancelScheduleIdle,
 } from '../utils';
 
 // ---------------------------------------------------------------------------
@@ -248,5 +249,46 @@ describe('sleep', () => {
     const start = Date.now();
     await sleep(50);
     expect(Date.now() - start).toBeGreaterThanOrEqual(40);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// requestIdleCallback Polyfill / Wrapper
+// ---------------------------------------------------------------------------
+
+describe('cancelScheduleIdle', () => {
+  let originalCancelIdleCallback: any;
+  let originalClearTimeout: any;
+
+  beforeEach(() => {
+    originalCancelIdleCallback = (window as any).cancelIdleCallback;
+    originalClearTimeout = global.clearTimeout;
+  });
+
+  afterEach(() => {
+    (window as any).cancelIdleCallback = originalCancelIdleCallback;
+    global.clearTimeout = originalClearTimeout;
+  });
+
+  it('uses window.cancelIdleCallback if available', () => {
+    const mockCancelIdleCallback = jest.fn();
+    (window as any).cancelIdleCallback = mockCancelIdleCallback;
+    const mockClearTimeout = jest.fn();
+    global.clearTimeout = mockClearTimeout as any;
+
+    cancelScheduleIdle(123);
+
+    expect(mockCancelIdleCallback).toHaveBeenCalledWith(123);
+    expect(mockClearTimeout).not.toHaveBeenCalled();
+  });
+
+  it('falls back to clearTimeout if window.cancelIdleCallback is not available', () => {
+    (window as any).cancelIdleCallback = undefined;
+    const mockClearTimeout = jest.fn();
+    global.clearTimeout = mockClearTimeout as any;
+
+    cancelScheduleIdle(456);
+
+    expect(mockClearTimeout).toHaveBeenCalledWith(456);
   });
 });
