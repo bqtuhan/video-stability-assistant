@@ -29,7 +29,9 @@ import {
   hostnameFromUrl,
   shallowMerge,
   sleep,
+  logEntriesToCSV,
 } from '../utils';
+import type { LogEntry } from '../types';
 
 // ---------------------------------------------------------------------------
 // Numeric Utilities
@@ -248,5 +250,49 @@ describe('sleep', () => {
     const start = Date.now();
     await sleep(50);
     expect(Date.now() - start).toBeGreaterThanOrEqual(40);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// CSV Export Helpers
+// ---------------------------------------------------------------------------
+
+describe('logEntriesToCSV', () => {
+  it('returns only the header when the entries array is empty', () => {
+    const csv = logEntriesToCSV([]);
+    expect(csv).toBe('Timestamp,Score,Level,Bitrate,DroppedFrames,StallCount,BufferAhead\n');
+  });
+
+  it('correctly formats an array of log entries into a CSV string', () => {
+    const entries: LogEntry[] = [
+      {
+        timestamp: 1700000000000, // 2023-11-14T22:13:20.000Z
+        score: 95,
+        level: 'excellent',
+        bitrate: 5000,
+        droppedFrames: 0,
+        stallCount: 0,
+        bufferAhead: 30,
+        advisoryCodes: []
+      },
+      {
+        timestamp: 1700000005000, // 2023-11-14T22:13:25.000Z
+        score: 40,
+        level: 'poor',
+        bitrate: 800,
+        droppedFrames: 15,
+        stallCount: 2,
+        bufferAhead: 5,
+        advisoryCodes: ['POOR_BUFFER']
+      }
+    ];
+
+    const csv = logEntriesToCSV(entries);
+    const expected =
+      'Timestamp,Score,Level,Bitrate,DroppedFrames,StallCount,BufferAhead\n' +
+      '2023-11-14T22:13:20.000Z,95,excellent,5000,0,0,30\n' +
+      '2023-11-14T22:13:25.000Z,40,poor,800,15,2,5';
+
+    expect(csv).toBe(expected);
   });
 });
